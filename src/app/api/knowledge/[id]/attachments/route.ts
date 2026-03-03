@@ -80,8 +80,7 @@ export async function POST(
             fileName: file.name,
             fileUrl: `/api/attachments/${storedName}`,
             fileType,
-            fileSizeBytes: file.size,
-            mimeType,
+            fileSize: file.size,
         },
     });
 

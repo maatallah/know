@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Know — Digital Operational Knowledge Platform
+
+A structured, multilingual platform for capturing machine procedures, operational skills, and technical know-how.
+
+## Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS v4
+- **Backend:** Next.js API Routes, Prisma ORM, PostgreSQL
+- **Auth:** NextAuth v4 (Credentials + JWT)
+- **i18n:** next-intl (Arabic RTL, French, English)
+- **Validation:** Zod
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js ≥ 24
+- PostgreSQL ≥ 18
+
+### Setup
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy env file and configure your DATABASE_URL
+cp .env.example .env
+
+# Push schema to database
+npx prisma db push
+
+# Seed the database
+npx prisma db seed
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Test Accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Email | Password | Role |
+|-------|----------|------|
+| admin@example.com | password123 | Super Admin |
+| expert@example.com | password123 | Expert |
+| reviewer@example.com | password123 | Reviewer |
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Knowledge Base** — CRUD with search, filters, pagination
+- **Workflow** — Draft → In Review → Approved → Archived (RBAC enforced)
+- **Dashboard** — Live stats, department breakdown, most viewed, contributors
+- **Attachments** — Upload/download files (PDF, images, video, audio) up to 300MB
+- **Knowledge Gaps** — Submit missing procedures, assign, close
+- **Health Score** — Automated freshness/quality scoring
+- **Audit Log** — Full action history
+- **Multilingual** — Arabic (RTL), French, English with automatic layout mirroring
+- **Dark/Light Theme** — Persistent toggle
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/
+│   ├── [locale]/          # Locale-specific pages
+│   │   ├── knowledge/     # Knowledge CRUD pages
+│   │   ├── gaps/          # Knowledge Gap pages
+│   │   ├── machines/      # Machines list
+│   │   ├── departments/   # Departments list
+│   │   ├── users/         # User management
+│   │   ├── audit/         # Audit log
+│   │   └── login/         # Auth
+│   └── api/               # API routes
+│       ├── knowledge/     # Knowledge CRUD + workflow + attachments
+│       ├── gaps/          # Gap CRUD
+│       ├── dashboard/     # Aggregated stats
+│       └── auth/          # NextAuth
+├── components/            # Shared UI components
+├── i18n/                  # Internationalization config
+└── lib/                   # Utilities (prisma, auth, validations, health-score)
+messages/                  # Translation files (ar.json, fr.json, en.json)
+prisma/                    # Schema + seed script
+```
 
-## Deploy on Vercel
+## Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See `.env.example` for all required variables.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+Private — All rights reserved.

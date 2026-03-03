@@ -61,7 +61,7 @@ export default function KnowledgeDetailPage() {
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
     const [comment, setComment] = useState('');
-    const [attachments, setAttachments] = useState<{ id: string; fileName: string; fileUrl: string; fileType: string; fileSizeBytes: number; downloadCount: number }[]>([]);
+    const [attachments, setAttachments] = useState<{ id: string; fileName: string; fileUrl: string; fileType: string; fileSize: number; downloadCount: number }[]>([]);
     const [uploading, setUploading] = useState(false);
 
     const id = params.id as string;
@@ -256,7 +256,7 @@ export default function KnowledgeDetailPage() {
                                     <div>
                                         <p className="text-sm font-medium">{att.fileName}</p>
                                         <p className="text-xs text-muted-foreground">
-                                            {(att.fileSizeBytes / 1024).toFixed(0)} KB · {att.downloadCount} downloads
+                                            {(att.fileSize / 1024).toFixed(0)} KB · {att.downloadCount} downloads
                                         </p>
                                     </div>
                                 </div>

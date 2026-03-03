@@ -33,9 +33,18 @@ export async function GET(
             data: { downloadCount: { increment: 1 } },
         });
 
+        // Derive content type from fileType
+        const contentTypeMap: Record<string, string> = {
+            PDF: 'application/pdf',
+            IMAGE: 'image/png',
+            VIDEO: 'video/mp4',
+            AUDIO: 'audio/mpeg',
+        };
+        const contentType = contentTypeMap[attachment.fileType] || 'application/octet-stream';
+
         return new NextResponse(fileBuffer, {
             headers: {
-                'Content-Type': attachment.mimeType || 'application/octet-stream',
+                'Content-Type': contentType,
                 'Content-Disposition': `inline; filename="${attachment.fileName}"`,
                 'Content-Length': String(fileBuffer.length),
             },
