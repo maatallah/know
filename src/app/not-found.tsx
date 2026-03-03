@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 export default function NotFound() {
     return (
-        <html lang="en">
-            <body className="min-h-screen bg-[#fafafa] text-[#1a1a2e] flex items-center justify-center font-sans">
+        <html lang="en" suppressHydrationWarning>
+            <body className="min-h-screen flex items-center justify-center font-sans bg-[hsl(222,47%,6%)] text-[hsl(210,40%,98%)]">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                    <div className="text-6xl font-bold text-gray-300">404</div>
+                    <div className="text-6xl font-bold opacity-20">404</div>
                     <h2 className="text-xl font-semibold">Page not found</h2>
-                    <p className="text-sm text-gray-500 max-w-md">
+                    <p className="text-sm opacity-60 max-w-md">
                         The page you are looking for does not exist or has been moved.
                     </p>
                     <Link

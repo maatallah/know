@@ -52,7 +52,7 @@ export default function AuditPage() {
                         <div key={entry.id} className="rounded-lg border border-border bg-card p-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', actionColors[entry.action] || 'bg-gray-100 text-gray-800')}>
+                                    <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', actionColors[entry.action] || 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400')}>
                                         {entry.action}
                                     </span>
                                     <span className="text-sm font-medium">{entry.entityType}</span>
