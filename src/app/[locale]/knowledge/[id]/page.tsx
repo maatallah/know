@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Eye, Clock, Shield, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Eye, Clock, Shield, AlertTriangle, Paperclip, Download, Trash2 } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 
 interface KnowledgeDetail {
@@ -61,6 +61,8 @@ export default function KnowledgeDetailPage() {
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
     const [comment, setComment] = useState('');
+    const [attachments, setAttachments] = useState<{ id: string; fileName: string; fileUrl: string; fileType: string; fileSizeBytes: number; downloadCount: number }[]>([]);
+    const [uploading, setUploading] = useState(false);
 
     const id = params.id as string;
 
@@ -72,7 +74,32 @@ export default function KnowledgeDetailPage() {
                 else setItem(data);
             })
             .finally(() => setLoading(false));
+        fetch(`/api/knowledge/${id}/attachments`)
+            .then((r) => r.json())
+            .then((data) => setAttachments(data || []))
+            .catch(() => { });
     }, [id]);
+
+    async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch(`/api/knowledge/${id}/attachments`, { method: 'POST', body: formData });
+        if (res.ok) {
+            const att = await res.json();
+            setAttachments((prev) => [att, ...prev]);
+        }
+        setUploading(false);
+        e.target.value = '';
+    }
+
+    async function handleDeleteAttachment(fileUrl: string) {
+        const filename = fileUrl.split('/').pop();
+        await fetch(`/api/attachments/${filename}`, { method: 'DELETE' });
+        setAttachments((prev) => prev.filter((a) => a.fileUrl !== fileUrl));
+    }
 
     async function handleWorkflow(action: string) {
         if (action === 'approve' && !comment.trim()) {
@@ -204,6 +231,46 @@ export default function KnowledgeDetailPage() {
 
                 {item.status === 'ARCHIVED' && (
                     <p className="text-sm text-muted-foreground">This item has been archived.</p>
+                )}
+            </div>
+
+            {/* Attachments */}
+            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-semibold flex items-center gap-2">
+                        <Paperclip className="h-4 w-4" /> Attachments ({attachments.length})
+                    </h2>
+                    <label className="cursor-pointer rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80 transition-colors">
+                        {uploading ? '...' : 'Upload'}
+                        <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
+                    </label>
+                </div>
+                {attachments.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No attachments yet.</p>
+                ) : (
+                    <div className="space-y-2">
+                        {attachments.map((att) => (
+                            <div key={att.id} className="flex items-center justify-between rounded-lg border border-border p-3">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xs font-bold text-muted-foreground uppercase">{att.fileType}</span>
+                                    <div>
+                                        <p className="text-sm font-medium">{att.fileName}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {(att.fileSizeBytes / 1024).toFixed(0)} KB · {att.downloadCount} downloads
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <a href={att.fileUrl} target="_blank" className="p-1.5 rounded hover:bg-accent transition-colors">
+                                        <Download className="h-4 w-4" />
+                                    </a>
+                                    <button onClick={() => handleDeleteAttachment(att.fileUrl)} className="p-1.5 rounded hover:bg-destructive/10 text-destructive transition-colors">
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
 
