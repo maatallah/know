@@ -1,0 +1,93 @@
+{
+    "common": {
+        "appName": "Know",
+        "search": "بحث",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "create": "إنشاء",
+        "back": "رجوع",
+        "loading": "جاري التحميل...",
+        "noResults": "لا توجد نتائج",
+        "confirm": "تأكيد",
+        "close": "إغلاق",
+        "submit": "إرسال",
+        "actions": "إجراءات",
+        "status": "الحالة",
+        "createdAt": "تاريخ الإنشاء",
+        "updatedAt": "تاريخ التحديث"
+    },
+    "nav": {
+        "dashboard": "لوحة القيادة",
+        "knowledge": "قاعدة المعرفة",
+        "machines": "الآلات",
+        "departments": "الأقسام",
+        "gaps": "فجوات المعرفة",
+        "users": "المستخدمون",
+        "audit": "سجل المراجعة",
+        "settings": "الإعدادات"
+    },
+    "auth": {
+        "login": "تسجيل الدخول",
+        "logout": "تسجيل الخروج",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "loginTitle": "سجّل الدخول إلى حسابك",
+        "loginSubtitle": "الوصول إلى منصة المعرفة التشغيلية",
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى."
+    },
+    "dashboard": {
+        "title": "لوحة القيادة",
+        "totalItems": "إجمالي العناصر",
+        "itemsByDepartment": "العناصر حسب القسم",
+        "inReview": "قيد المراجعة",
+        "expiredItems": "العناصر منتهية الصلاحية",
+        "nearExpiry": "قريبة من الانتهاء",
+        "mostViewed": "الأكثر مشاهدة",
+        "gapsSubmitted": "الفجوات المقدمة",
+        "contributionStats": "المساهمات"
+    },
+    "knowledge": {
+        "title": "قاعدة المعرفة",
+        "createNew": "عنصر معرفة جديد",
+        "type": "النوع",
+        "riskLevel": "مستوى المخاطر",
+        "criticality": "الأهمية",
+        "department": "القسم",
+        "machine": "الآلة",
+        "owner": "المالك",
+        "status": "الحالة",
+        "tags": "الوسوم",
+        "effectiveDate": "تاريخ السريان",
+        "expiryDate": "تاريخ الانتهاء",
+        "viewCount": "المشاهدات",
+        "healthScore": "نقاط الصحة",
+        "version": "الإصدار",
+        "types": {
+            "MACHINE_PROCEDURE": "إجراء الآلة",
+            "WORK_INSTRUCTION": "تعليمات العمل",
+            "MAINTENANCE_GUIDE": "دليل الصيانة",
+            "TROUBLESHOOTING": "استكشاف الأخطاء",
+            "SAFETY_INSTRUCTION": "تعليمات السلامة",
+            "TRAINING_GUIDE": "دليل التدريب"
+        },
+        "statuses": {
+            "DRAFT": "مسودة",
+            "IN_REVIEW": "قيد المراجعة",
+            "APPROVED": "معتمد",
+            "ARCHIVED": "مؤرشف"
+        },
+        "riskLevels": {
+            "LOW": "منخفض",
+            "MEDIUM": "متوسط",
+            "HIGH": "مرتفع"
+        }
+    },
+    "theme": {
+        "light": "فاتح",
+        "dark": "داكن",
+        "system": "النظام"
+    }
+}

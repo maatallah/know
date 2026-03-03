@@ -1,0 +1,243 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { ArrowLeft, Eye, Clock, Shield, AlertTriangle } from 'lucide-react';
+import { Link } from '@/i18n/routing';
+
+interface KnowledgeDetail {
+    id: string;
+    title: string;
+    shortDescription: string | null;
+    type: string;
+    riskLevel: string;
+    criticalityLevel: string;
+    estimatedTimeMin: number | null;
+    requiredTools: string | null;
+    preconditions: string | null;
+    expectedOutcome: string | null;
+    status: string;
+    viewCount: number;
+    healthScore: number;
+    effectiveDate: string | null;
+    expiryDate: string | null;
+    owner: { id: string; name: string | null };
+    department: { id: string; name: string };
+    machine: { id: string; name: string } | null;
+    category: { id: string; name: string } | null;
+    tags: { id: string; name: string }[];
+    versions: {
+        id: string;
+        versionNumber: number;
+        content: string;
+        status: string;
+        approvalComment: string | null;
+        author: { id: string; name: string | null };
+        createdAt: string;
+    }[];
+    comments: {
+        id: string;
+        content: string;
+        user: { id: string; name: string | null };
+        createdAt: string;
+    }[];
+}
+
+const statusColors: Record<string, string> = {
+    DRAFT: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    IN_REVIEW: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+    APPROVED: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    ARCHIVED: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-400',
+};
+
+export default function KnowledgeDetailPage() {
+    const t = useTranslations('knowledge');
+    const tc = useTranslations('common');
+    const params = useParams();
+    const router = useRouter();
+    const [item, setItem] = useState<KnowledgeDetail | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [actionLoading, setActionLoading] = useState(false);
+    const [comment, setComment] = useState('');
+
+    const id = params.id as string;
+
+    useEffect(() => {
+        fetch(`/api/knowledge/${id}`)
+            .then((r) => r.json())
+            .then((data) => {
+                if (data.error) setItem(null);
+                else setItem(data);
+            })
+            .finally(() => setLoading(false));
+    }, [id]);
+
+    async function handleWorkflow(action: string) {
+        if (action === 'approve' && !comment.trim()) {
+            alert('Approval comment is mandatory');
+            return;
+        }
+        setActionLoading(true);
+        const res = await fetch(`/api/knowledge/${id}/workflow`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, comment: comment.trim() || undefined }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+            // Refresh
+            const fresh = await fetch(`/api/knowledge/${id}`);
+            setItem(await fresh.json());
+            setComment('');
+        } else {
+            alert(data.error);
+        }
+        setActionLoading(false);
+    }
+
+    if (loading) return <div className="py-12 text-center text-muted-foreground">{tc('loading')}</div>;
+    if (!item) return <div className="py-12 text-center text-muted-foreground">Not found</div>;
+
+    const latestVersion = item.versions[0];
+
+    return (
+        <div className="space-y-6">
+            {/* Back + Title */}
+            <div className="flex items-start gap-4">
+                <Link href="/knowledge" className="mt-1 rounded-lg p-2 hover:bg-accent transition-colors">
+                    <ArrowLeft className="h-5 w-5" />
+                </Link>
+                <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <h1 className="text-2xl font-bold">{item.title}</h1>
+                        <span className={cn('rounded-full px-3 py-1 text-xs font-medium', statusColors[item.status])}>
+                            {t(`statuses.${item.status}`)}
+                        </span>
+                    </div>
+                    {item.shortDescription && (
+                        <p className="mt-1 text-muted-foreground">{item.shortDescription}</p>
+                    )}
+                </div>
+            </div>
+
+            {/* Metadata Grid */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <MetaCard icon={<Shield className="h-4 w-4" />} label={t('riskLevel')} value={t(`riskLevels.${item.riskLevel}`)} />
+                <MetaCard icon={<AlertTriangle className="h-4 w-4" />} label={t('criticality')} value={item.criticalityLevel} />
+                <MetaCard icon={<Clock className="h-4 w-4" />} label={t('type')} value={t(`types.${item.type}`)} />
+                <MetaCard icon={<Eye className="h-4 w-4" />} label={t('viewCount')} value={String(item.viewCount)} />
+            </div>
+
+            {/* Extra metadata */}
+            <div className="grid gap-4 sm:grid-cols-2">
+                <InfoRow label={t('department')} value={item.department.name} />
+                {item.machine && <InfoRow label={t('machine')} value={item.machine.name} />}
+                {item.owner.name && <InfoRow label={t('owner')} value={item.owner.name} />}
+                {item.requiredTools && <InfoRow label="Required Tools" value={item.requiredTools} />}
+                {item.preconditions && <InfoRow label="Preconditions" value={item.preconditions} />}
+                {item.expectedOutcome && <InfoRow label="Expected Outcome" value={item.expectedOutcome} />}
+            </div>
+
+            {/* Content */}
+            {latestVersion && (
+                <div className="rounded-xl border border-border bg-card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold">{t('version')} {latestVersion.versionNumber}</h2>
+                        <span className="text-sm text-muted-foreground">
+                            {latestVersion.author.name}
+                        </span>
+                    </div>
+                    <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap text-sm">
+                        {latestVersion.content}
+                    </div>
+                    {latestVersion.approvalComment && (
+                        <div className="mt-4 rounded-lg bg-green-50 dark:bg-green-900/20 p-3 text-sm">
+                            <strong>Approval:</strong> {latestVersion.approvalComment}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Workflow Actions */}
+            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+                <h2 className="text-lg font-semibold">Workflow Actions</h2>
+
+                {item.status === 'DRAFT' && (
+                    <button
+                        onClick={() => handleWorkflow('submit-review')}
+                        disabled={actionLoading}
+                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                    >
+                        Submit for Review
+                    </button>
+                )}
+
+                {item.status === 'IN_REVIEW' && (
+                    <div className="space-y-3">
+                        <textarea
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder="Approval comment (mandatory)..."
+                            className="flex min-h-[80px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        />
+                        <button
+                            onClick={() => handleWorkflow('approve')}
+                            disabled={actionLoading}
+                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+                        >
+                            Approve
+                        </button>
+                    </div>
+                )}
+
+                {item.status === 'APPROVED' && (
+                    <button
+                        onClick={() => handleWorkflow('archive')}
+                        disabled={actionLoading}
+                        className="rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                    >
+                        Archive
+                    </button>
+                )}
+
+                {item.status === 'ARCHIVED' && (
+                    <p className="text-sm text-muted-foreground">This item has been archived.</p>
+                )}
+            </div>
+
+            {/* Tags */}
+            {item.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag) => (
+                        <span key={tag.id} className="rounded-full bg-secondary px-3 py-1 text-xs font-medium">
+                            {tag.name}
+                        </span>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function MetaCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+    return (
+        <div className="rounded-xl border border-border bg-card p-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+                {icon}
+                <span className="text-xs font-medium">{label}</span>
+            </div>
+            <p className="mt-1 text-lg font-semibold">{value}</p>
+        </div>
+    );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="rounded-lg border border-border bg-card px-4 py-3">
+            <span className="text-xs font-medium text-muted-foreground">{label}</span>
+            <p className="text-sm font-medium mt-0.5">{value}</p>
+        </div>
+    );
+}

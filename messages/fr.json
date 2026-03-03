@@ -1,0 +1,93 @@
+{
+    "common": {
+        "appName": "Know",
+        "search": "Rechercher",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "edit": "Modifier",
+        "create": "Créer",
+        "back": "Retour",
+        "loading": "Chargement...",
+        "noResults": "Aucun résultat trouvé",
+        "confirm": "Confirmer",
+        "close": "Fermer",
+        "submit": "Soumettre",
+        "actions": "Actions",
+        "status": "Statut",
+        "createdAt": "Créé le",
+        "updatedAt": "Mis à jour le"
+    },
+    "nav": {
+        "dashboard": "Tableau de bord",
+        "knowledge": "Base de connaissances",
+        "machines": "Machines",
+        "departments": "Départements",
+        "gaps": "Lacunes de connaissances",
+        "users": "Utilisateurs",
+        "audit": "Journal d'audit",
+        "settings": "Paramètres"
+    },
+    "auth": {
+        "login": "Se connecter",
+        "logout": "Se déconnecter",
+        "email": "Email",
+        "password": "Mot de passe",
+        "loginTitle": "Connectez-vous à votre compte",
+        "loginSubtitle": "Accédez à la plateforme de connaissances opérationnelles",
+        "invalidCredentials": "Email ou mot de passe invalide",
+        "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter."
+    },
+    "dashboard": {
+        "title": "Tableau de bord",
+        "totalItems": "Total des articles",
+        "itemsByDepartment": "Articles par département",
+        "inReview": "En révision",
+        "expiredItems": "Articles expirés",
+        "nearExpiry": "Proche de l'expiration",
+        "mostViewed": "Les plus consultés",
+        "gapsSubmitted": "Lacunes soumises",
+        "contributionStats": "Contributions"
+    },
+    "knowledge": {
+        "title": "Base de connaissances",
+        "createNew": "Nouvel article",
+        "type": "Type",
+        "riskLevel": "Niveau de risque",
+        "criticality": "Criticité",
+        "department": "Département",
+        "machine": "Machine",
+        "owner": "Propriétaire",
+        "status": "Statut",
+        "tags": "Étiquettes",
+        "effectiveDate": "Date d'effet",
+        "expiryDate": "Date d'expiration",
+        "viewCount": "Vues",
+        "healthScore": "Score de santé",
+        "version": "Version",
+        "types": {
+            "MACHINE_PROCEDURE": "Procédure machine",
+            "WORK_INSTRUCTION": "Instruction de travail",
+            "MAINTENANCE_GUIDE": "Guide de maintenance",
+            "TROUBLESHOOTING": "Dépannage",
+            "SAFETY_INSTRUCTION": "Instruction de sécurité",
+            "TRAINING_GUIDE": "Guide de formation"
+        },
+        "statuses": {
+            "DRAFT": "Brouillon",
+            "IN_REVIEW": "En révision",
+            "APPROVED": "Approuvé",
+            "ARCHIVED": "Archivé"
+        },
+        "riskLevels": {
+            "LOW": "Faible",
+            "MEDIUM": "Moyen",
+            "HIGH": "Élevé"
+        }
+    },
+    "theme": {
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système"
+    }
+}

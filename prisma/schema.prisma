@@ -1,0 +1,220 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  DEPARTMENT_MANAGER
+  EXPERT
+  REVIEWER
+  STANDARD_USER
+}
+
+enum KnowledgeType {
+  MACHINE_PROCEDURE
+  WORK_INSTRUCTION
+  MAINTENANCE_GUIDE
+  TROUBLESHOOTING
+  SAFETY_INSTRUCTION
+  TRAINING_GUIDE
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum CriticalityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum KnowledgeStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  ARCHIVED
+}
+
+enum GapRequestStatus {
+  OPEN
+  ASSIGNED
+  CLOSED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  role          Role      @default(STANDARD_USER)
+  departmentId  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  department    Department? @relation(fields: [departmentId], references: [id])
+  
+  ownedItems    KnowledgeItem[]   @relation("ItemOwner")
+  gapRequests   KnowledgeGapRequest[] @relation("GapRequestReporter")
+  assignedGaps  KnowledgeGapRequest[] @relation("GapRequestAssignee")
+  comments      Comment[]
+  auditLogs     AuditLog[]
+  versions      KnowledgeVersion[] @relation("VersionAuthor")
+}
+
+model Department {
+  id            String    @id @default(cuid())
+  name          String    @unique
+  description   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  users         User[]
+  machines      Machine[]
+  knowledgeItems KnowledgeItem[]
+}
+
+model Machine {
+  id            String    @id @default(cuid())
+  name          String
+  serialNumber  String?   @unique
+  departmentId  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  department    Department @relation(fields: [departmentId], references: [id])
+  knowledgeItems KnowledgeItem[]
+}
+
+model Category {
+  id            String    @id @default(cuid())
+  name          String
+  parentId      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  parent        Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children      Category[] @relation("SubCategories")
+  knowledgeItems KnowledgeItem[]
+}
+
+model Tag {
+  id            String    @id @default(cuid())
+  name          String    @unique
+  
+  knowledgeItems KnowledgeItem[]
+}
+
+model KnowledgeItem {
+  id                  String           @id @default(cuid())
+  title               String
+  shortDescription    String?
+  type                KnowledgeType
+  riskLevel           RiskLevel
+  criticalityLevel    CriticalityLevel
+  estimatedTimeMin    Int?
+  requiredTools       String?
+  preconditions       String?
+  expectedOutcome     String?
+  status              KnowledgeStatus  @default(DRAFT)
+  viewCount           Int              @default(0)
+  isDeleted           Boolean          @default(false)
+  effectiveDate       DateTime?
+  expiryDate          DateTime?
+  healthScore         Int              @default(100)
+  
+  ownerId             String
+  departmentId        String
+  machineId           String?
+  categoryId          String?
+  
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  owner               User             @relation("ItemOwner", fields: [ownerId], references: [id])
+  department          Department       @relation(fields: [departmentId], references: [id])
+  machine             Machine?         @relation(fields: [machineId], references: [id])
+  category            Category?        @relation(fields: [categoryId], references: [id])
+  tags                Tag[]
+  versions            KnowledgeVersion[]
+  attachments         Attachment[]
+  comments            Comment[]
+  gapRequests         KnowledgeGapRequest[] @relation("LinkedKnowledge")
+}
+
+model KnowledgeVersion {
+  id              String         @id @default(cuid())
+  knowledgeItemId String
+  versionNumber   Int
+  content         String         // Markdown content
+  authorId        String
+  reviewerId      String?
+  approvalComment String?
+  snapshot        Json?          // Stores full snapshot of metadata at approval
+  status          KnowledgeStatus @default(DRAFT)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  knowledgeItem   KnowledgeItem  @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  author          User           @relation("VersionAuthor", fields: [authorId], references: [id])
+}
+
+model Attachment {
+  id              String         @id @default(cuid())
+  knowledgeItemId String
+  fileName        String
+  fileUrl         String
+  fileType        String
+  fileSize        Int            // in bytes
+  downloadCount   Int            @default(0)
+  createdAt       DateTime       @default(now())
+
+  knowledgeItem   KnowledgeItem  @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id              String         @id @default(cuid())
+  knowledgeItemId String
+  userId          String
+  content         String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  knowledgeItem   KnowledgeItem  @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // e.g., "CREATE", "UPDATE", "APPROVAL", "DELETE"
+  entityType  String   // e.g., "KnowledgeItem", "User"
+  entityId    String
+  userId      String
+  details     Json?    // Optional JSON payload with extra data
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model KnowledgeGapRequest {
+  id                String             @id @default(cuid())
+  title             String
+  description       String
+  status            GapRequestStatus   @default(OPEN)
+  reporterId        String
+  assigneeId        String?
+  linkedItemId      String?            // If gap request results in knowledge creation
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  reporter          User               @relation("GapRequestReporter", fields: [reporterId], references: [id])
+  assignee          User?              @relation("GapRequestAssignee", fields: [assigneeId], references: [id])
+  linkedItem        KnowledgeItem?     @relation("LinkedKnowledge", fields: [linkedItemId], references: [id])
+}

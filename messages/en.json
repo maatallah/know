@@ -1,0 +1,93 @@
+{
+    "common": {
+        "appName": "Know",
+        "search": "Search",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "create": "Create",
+        "back": "Back",
+        "loading": "Loading...",
+        "noResults": "No results found",
+        "confirm": "Confirm",
+        "close": "Close",
+        "submit": "Submit",
+        "actions": "Actions",
+        "status": "Status",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At"
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "knowledge": "Knowledge Base",
+        "machines": "Machines",
+        "departments": "Departments",
+        "gaps": "Knowledge Gaps",
+        "users": "Users",
+        "audit": "Audit Log",
+        "settings": "Settings"
+    },
+    "auth": {
+        "login": "Log In",
+        "logout": "Log Out",
+        "email": "Email",
+        "password": "Password",
+        "loginTitle": "Sign in to your account",
+        "loginSubtitle": "Access the operational knowledge platform",
+        "invalidCredentials": "Invalid email or password",
+        "sessionExpired": "Your session has expired. Please log in again."
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "totalItems": "Total Items",
+        "itemsByDepartment": "Items by Department",
+        "inReview": "In Review",
+        "expiredItems": "Expired Items",
+        "nearExpiry": "Near Expiry",
+        "mostViewed": "Most Viewed",
+        "gapsSubmitted": "Gaps Submitted",
+        "contributionStats": "Contributions"
+    },
+    "knowledge": {
+        "title": "Knowledge Base",
+        "createNew": "New Knowledge Item",
+        "type": "Type",
+        "riskLevel": "Risk Level",
+        "criticality": "Criticality",
+        "department": "Department",
+        "machine": "Machine",
+        "owner": "Owner",
+        "status": "Status",
+        "tags": "Tags",
+        "effectiveDate": "Effective Date",
+        "expiryDate": "Expiry Date",
+        "viewCount": "Views",
+        "healthScore": "Health Score",
+        "version": "Version",
+        "types": {
+            "MACHINE_PROCEDURE": "Machine Procedure",
+            "WORK_INSTRUCTION": "Work Instruction",
+            "MAINTENANCE_GUIDE": "Maintenance Guide",
+            "TROUBLESHOOTING": "Troubleshooting",
+            "SAFETY_INSTRUCTION": "Safety Instruction",
+            "TRAINING_GUIDE": "Training Guide"
+        },
+        "statuses": {
+            "DRAFT": "Draft",
+            "IN_REVIEW": "In Review",
+            "APPROVED": "Approved",
+            "ARCHIVED": "Archived"
+        },
+        "riskLevels": {
+            "LOW": "Low",
+            "MEDIUM": "Medium",
+            "HIGH": "High"
+        }
+    },
+    "theme": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    }
+}
