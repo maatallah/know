@@ -85,6 +85,18 @@
             "HIGH": "مرتفع"
         }
     },
+    "gaps": {
+        "title": "فجوات المعرفة",
+        "submitNew": "تقديم طلب فجوة",
+        "gapTitle": "العنوان",
+        "gapTitlePlaceholder": "إجراء مفقود أو تحسين...",
+        "gapDescription": "الوصف",
+        "gapDescriptionPlaceholder": "صف الإجراء المفقود أو التحسين المقترح بالتفصيل...",
+        "submit": "تقديم الطلب",
+        "statusOpen": "مفتوح",
+        "statusAssigned": "مُعيّن",
+        "statusClosed": "مغلق"
+    },
     "theme": {
         "light": "فاتح",
         "dark": "داكن",

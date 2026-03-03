@@ -85,6 +85,18 @@
             "HIGH": "High"
         }
     },
+    "gaps": {
+        "title": "Knowledge Gaps",
+        "submitNew": "Submit Gap Request",
+        "gapTitle": "Title",
+        "gapTitlePlaceholder": "Missing procedure or improvement...",
+        "gapDescription": "Description",
+        "gapDescriptionPlaceholder": "Describe the missing procedure or suggested improvement in detail...",
+        "submit": "Submit Request",
+        "statusOpen": "Open",
+        "statusAssigned": "Assigned",
+        "statusClosed": "Closed"
+    },
     "theme": {
         "light": "Light",
         "dark": "Dark",

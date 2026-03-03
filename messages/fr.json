@@ -85,6 +85,18 @@
             "HIGH": "Élevé"
         }
     },
+    "gaps": {
+        "title": "Lacunes de connaissances",
+        "submitNew": "Soumettre une demande",
+        "gapTitle": "Titre",
+        "gapTitlePlaceholder": "Procédure manquante ou amélioration...",
+        "gapDescription": "Description",
+        "gapDescriptionPlaceholder": "Décrivez la procédure manquante ou l'amélioration suggérée en détail...",
+        "submit": "Soumettre la demande",
+        "statusOpen": "Ouvert",
+        "statusAssigned": "Assigné",
+        "statusClosed": "Fermé"
+    },
     "theme": {
         "light": "Clair",
         "dark": "Sombre",
