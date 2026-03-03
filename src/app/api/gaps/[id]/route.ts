@@ -14,8 +14,8 @@ export async function GET(
     const gap = await prisma.knowledgeGapRequest.findUnique({
         where: { id },
         include: {
-            submittedBy: { select: { id: true, name: true } },
-            assignedTo: { select: { id: true, name: true } },
+            reporter: { select: { id: true, name: true } },
+            assignee: { select: { id: true, name: true } },
             linkedItem: { select: { id: true, title: true } },
         },
     });
@@ -24,7 +24,11 @@ export async function GET(
         return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    return NextResponse.json(gap);
+    return NextResponse.json({
+        ...gap,
+        submittedBy: gap.reporter,
+        assignedTo: gap.assignee,
+    });
 }
 
 // PUT — Update gap status (assign, close, link)
@@ -54,13 +58,12 @@ export async function PUT(
         where: { id },
         data: {
             status,
-            assignedToId: assigneeId || undefined,
+            assigneeId: assigneeId || undefined,
             linkedItemId: linkedItemId || undefined,
-            resolvedAt: status === 'CLOSED' ? new Date() : undefined,
         },
         include: {
-            submittedBy: { select: { id: true, name: true } },
-            assignedTo: { select: { id: true, name: true } },
+            reporter: { select: { id: true, name: true } },
+            assignee: { select: { id: true, name: true } },
             linkedItem: { select: { id: true, title: true } },
         },
     });
@@ -75,5 +78,9 @@ export async function PUT(
         },
     });
 
-    return NextResponse.json(gap);
+    return NextResponse.json({
+        ...gap,
+        submittedBy: gap.reporter,
+        assignedTo: gap.assignee,
+    });
 }

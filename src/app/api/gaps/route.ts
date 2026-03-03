@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { createGapRequestSchema, updateGapStatusSchema, validateRequest } from '@/lib/validations';
+import { createGapRequestSchema, validateRequest } from '@/lib/validations';
 
 // GET — List all gap requests
 export async function GET(req: NextRequest) {
@@ -16,13 +16,18 @@ export async function GET(req: NextRequest) {
         where,
         orderBy: { createdAt: 'desc' },
         include: {
-            submittedBy: { select: { id: true, name: true } },
-            assignedTo: { select: { id: true, name: true } },
+            reporter: { select: { id: true, name: true } },
+            assignee: { select: { id: true, name: true } },
             linkedItem: { select: { id: true, title: true } },
         },
     });
 
-    return NextResponse.json(gaps);
+    // Map to consistent API shape
+    return NextResponse.json(gaps.map((g) => ({
+        ...g,
+        submittedBy: g.reporter,
+        assignedTo: g.assignee,
+    })));
 }
 
 // POST — Submit a new gap request
@@ -47,10 +52,10 @@ export async function POST(req: NextRequest) {
         data: {
             title: validation.data.title,
             description: validation.data.description,
-            submittedById: userId,
+            reporterId: userId,
         },
         include: {
-            submittedBy: { select: { id: true, name: true } },
+            reporter: { select: { id: true, name: true } },
         },
     });
 
@@ -63,5 +68,5 @@ export async function POST(req: NextRequest) {
         },
     });
 
-    return NextResponse.json(gap, { status: 201 });
+    return NextResponse.json({ ...gap, submittedBy: gap.reporter }, { status: 201 });
 }
