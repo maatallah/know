@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { workflowActionSchema, validateRequest } from '@/lib/validations';
 
 // POST /api/knowledge/[id]/workflow — Handle workflow transitions
 // body: { action: 'submit-review' | 'approve' | 'archive', comment?: string }
@@ -16,9 +17,16 @@ export async function POST(
 
     const { id } = await params;
     const body = await req.json();
+    const validation = validateRequest(workflowActionSchema, body);
+    if (!validation.success) {
+        return NextResponse.json(
+            { error: 'Validation failed', details: validation.errors.flatten().fieldErrors },
+            { status: 400 }
+        );
+    }
+    const { action, comment } = validation.data;
     const userId = (session.user as { id: string }).id;
     const userRole = (session.user as { role: string }).role;
-    const action = body.action as string;
 
     const item = await prisma.knowledgeItem.findUnique({
         where: { id },
@@ -55,7 +63,7 @@ export async function POST(
                     entityType: 'KnowledgeItem',
                     entityId: id,
                     userId,
-                    details: { comment: body.comment || null },
+                    details: { comment: comment || null },
                 },
             }),
         ]);
@@ -72,12 +80,7 @@ export async function POST(
                 { status: 403 }
             );
         }
-        if (!body.comment) {
-            return NextResponse.json(
-                { error: 'Approval comment is mandatory' },
-                { status: 400 }
-            );
-        }
+        // Zod already enforces mandatory comment for approve action
 
         // Create snapshot of the item metadata at approval time
         const snapshot = {
@@ -100,7 +103,7 @@ export async function POST(
                 data: {
                     status: 'APPROVED',
                     reviewerId: userId,
-                    approvalComment: body.comment,
+                    approvalComment: comment!,
                     snapshot,
                 },
             }),
@@ -110,7 +113,7 @@ export async function POST(
                     entityType: 'KnowledgeItem',
                     entityId: id,
                     userId,
-                    details: { comment: body.comment },
+                    details: { comment },
                 },
             }),
         ]);

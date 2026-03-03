@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { createKnowledgeSchema, validateRequest } from '@/lib/validations';
 
 // GET /api/knowledge — List knowledge items with filters
 export async function GET(req: NextRequest) {
@@ -63,32 +64,41 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    const validation = validateRequest(createKnowledgeSchema, body);
+    if (!validation.success) {
+        return NextResponse.json(
+            { error: 'Validation failed', details: validation.errors.flatten().fieldErrors },
+            { status: 400 }
+        );
+    }
+
+    const data = validation.data;
     const userId = (session.user as { id: string }).id;
 
     const item = await prisma.knowledgeItem.create({
         data: {
-            title: body.title,
-            shortDescription: body.shortDescription,
-            type: body.type,
-            riskLevel: body.riskLevel,
-            criticalityLevel: body.criticalityLevel,
-            estimatedTimeMin: body.estimatedTimeMin || null,
-            requiredTools: body.requiredTools || null,
-            preconditions: body.preconditions || null,
-            expectedOutcome: body.expectedOutcome || null,
+            title: data.title,
+            shortDescription: data.shortDescription,
+            type: data.type,
+            riskLevel: data.riskLevel,
+            criticalityLevel: data.criticalityLevel,
+            estimatedTimeMin: data.estimatedTimeMin || null,
+            requiredTools: data.requiredTools || null,
+            preconditions: data.preconditions || null,
+            expectedOutcome: data.expectedOutcome || null,
             ownerId: userId,
-            departmentId: body.departmentId,
-            machineId: body.machineId || null,
-            categoryId: body.categoryId || null,
-            effectiveDate: body.effectiveDate ? new Date(body.effectiveDate) : null,
-            expiryDate: body.expiryDate ? new Date(body.expiryDate) : null,
-            tags: body.tagIds?.length
-                ? { connect: body.tagIds.map((id: string) => ({ id })) }
+            departmentId: data.departmentId,
+            machineId: data.machineId || null,
+            categoryId: data.categoryId || null,
+            effectiveDate: data.effectiveDate ? new Date(data.effectiveDate) : null,
+            expiryDate: data.expiryDate ? new Date(data.expiryDate) : null,
+            tags: data.tagIds?.length
+                ? { connect: data.tagIds.map((id: string) => ({ id })) }
                 : undefined,
             versions: {
                 create: {
                     versionNumber: 1,
-                    content: body.content || '',
+                    content: data.content,
                     authorId: userId,
                     status: 'DRAFT',
                 },
