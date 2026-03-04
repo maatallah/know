@@ -106,7 +106,7 @@ export default function NewKnowledgePage() {
                 </FormField>
 
                 {/* Short Description */}
-                <FormField label="Short Description">
+                <FormField label={t('shortDescription')}>
                     <textarea
                         value={form.shortDescription}
                         onChange={(e) => update('shortDescription', e.target.value)}
@@ -231,7 +231,7 @@ export default function NewKnowledgePage() {
                         required
                         rows={10}
                         className="input-field min-h-[200px] font-mono text-sm"
-                        placeholder="# Procedure Title&#10;&#10;## Step 1&#10;..."
+                        placeholder={t('contentPlaceholder')}
                     />
                 </FormField>
 
