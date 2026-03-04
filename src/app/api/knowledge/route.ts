@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 import { createKnowledgeSchema, validateRequest } from '@/lib/validations';
 
 // GET /api/knowledge — List knowledge items with filters
@@ -58,10 +57,8 @@ export async function GET(req: NextRequest) {
 
 // POST /api/knowledge — Create a new knowledge item
 export async function POST(req: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAuth('knowledge.create');
+    if (isAuthError(auth)) return auth;
 
     const body = await req.json();
     const validation = validateRequest(createKnowledgeSchema, body);
@@ -73,7 +70,7 @@ export async function POST(req: NextRequest) {
     }
 
     const data = validation.data;
-    const userId = (session.user as { id: string }).id;
+    const userId = auth.userId;
 
     const item = await prisma.knowledgeItem.create({
         data: {

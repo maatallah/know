@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 
 export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const auth = await requireAuth('users.edit');
+    if (isAuthError(auth)) return auth;
 
     const { id } = await params;
     const body = await req.json();
@@ -21,11 +20,7 @@ export async function PUT(
             departmentId: body.departmentId || null,
         },
         select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-            createdAt: true,
+            id: true, name: true, email: true, role: true, createdAt: true,
             department: { select: { id: true, name: true } },
         },
     });
@@ -37,14 +32,12 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const auth = await requireAuth('users.delete');
+    if (isAuthError(auth)) return auth;
 
     const { id } = await params;
 
-    // Don't allow self-deletion
-    const currentUserId = (session.user as unknown as { id: string }).id;
-    if (id === currentUserId) {
+    if (id === auth.userId) {
         return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 });
     }
 

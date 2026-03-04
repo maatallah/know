@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 import { workflowActionSchema, validateRequest } from '@/lib/validations';
 
 // POST /api/knowledge/[id]/workflow — Handle workflow transitions
@@ -10,10 +9,8 @@ export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAuth('knowledge.workflow');
+    if (isAuthError(auth)) return auth;
 
     const { id } = await params;
     const body = await req.json();
@@ -25,8 +22,8 @@ export async function POST(
         );
     }
     const { action, comment } = validation.data;
-    const userId = (session.user as { id: string }).id;
-    const userRole = (session.user as { role: string }).role;
+    const userId = auth.userId;
+    const userRole = auth.userRole;
 
     const item = await prisma.knowledgeItem.findUnique({
         where: { id },

@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 
 export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const auth = await requireAuth('departments.edit');
+    if (isAuthError(auth)) return auth;
 
     const { id } = await params;
     const body = await req.json();
@@ -29,12 +28,11 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const auth = await requireAuth('departments.delete');
+    if (isAuthError(auth)) return auth;
 
     const { id } = await params;
 
-    // Check if department has linked items
     const counts = await prisma.department.findUnique({
         where: { id },
         include: { _count: { select: { users: true, machines: true, knowledgeItems: true } } },

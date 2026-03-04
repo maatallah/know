@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 
 export async function GET() {
     const machines = await prisma.machine.findMany({
@@ -12,8 +11,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const auth = await requireAuth('machines.create');
+    if (isAuthError(auth)) return auth;
 
     const body = await req.json();
     if (!body.name || body.name.trim().length < 2) {

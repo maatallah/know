@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Settings2, Plus, Pencil, Trash2, X, Check } from 'lucide-react';
+import { usePermissions } from '@/lib/usePermissions';
 
 interface Machine {
     id: string;
@@ -20,6 +21,7 @@ interface Department {
 export default function MachinesPage() {
     const t = useTranslations('nav');
     const tc = useTranslations('common');
+    const { can } = usePermissions();
     const [machines, setMachines] = useState<Machine[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
     const [loading, setLoading] = useState(true);
@@ -133,12 +135,12 @@ export default function MachinesPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">{t('machines')}</h1>
-                <button
+                {can('machines.create') && <button
                     onClick={() => { setShowAdd(true); setEditingId(null); setForm({ name: '', serialNumber: '', departmentId: departments[0]?.id || '' }); }}
                     className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
                     <Plus className="h-4 w-4" /> {tc('create')}
-                </button>
+                </button>}
             </div>
 
             {showAdd && (
@@ -173,12 +175,12 @@ export default function MachinesPage() {
                                             </div>
                                         </div>
                                         <div className="flex gap-1">
-                                            <button onClick={() => startEdit(m)} className="p-1.5 rounded hover:bg-accent transition-colors">
+                                            {can('machines.edit') && <button onClick={() => startEdit(m)} className="p-1.5 rounded hover:bg-accent transition-colors">
                                                 <Pencil className="h-4 w-4 text-muted-foreground" />
-                                            </button>
-                                            <button onClick={() => handleDelete(m.id)} className="p-1.5 rounded hover:bg-destructive/10 transition-colors">
+                                            </button>}
+                                            {can('machines.delete') && <button onClick={() => handleDelete(m.id)} className="p-1.5 rounded hover:bg-destructive/10 transition-colors">
                                                 <Trash2 className="h-4 w-4 text-destructive" />
-                                            </button>
+                                            </button>}
                                         </div>
                                     </div>
                                     <p className="text-sm text-muted-foreground">{m.department.name}</p>

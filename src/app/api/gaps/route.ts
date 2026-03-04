@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 import { createGapRequestSchema, validateRequest } from '@/lib/validations';
 
 // GET — List all gap requests
@@ -32,10 +31,8 @@ export async function GET(req: NextRequest) {
 
 // POST — Submit a new gap request
 export async function POST(req: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAuth('gaps.create');
+    if (isAuthError(auth)) return auth;
 
     const body = await req.json();
     const validation = validateRequest(createGapRequestSchema, body);
@@ -46,7 +43,7 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    const userId = (session.user as { id: string }).id;
+    const userId = auth.userId;
 
     const gap = await prisma.knowledgeGapRequest.create({
         data: {

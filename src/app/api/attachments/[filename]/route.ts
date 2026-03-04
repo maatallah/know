@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { readFile, unlink } from 'fs/promises';
 import { join } from 'path';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth, isAuthError } from '@/lib/rbac';
 
 const UPLOAD_DIR = join(process.cwd(), 'uploads');
 
@@ -59,10 +58,8 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: Promise<{ filename: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAuth('attachments.delete');
+    if (isAuthError(auth)) return auth;
 
     const { filename } = await params;
 

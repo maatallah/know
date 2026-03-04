@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Plus, Pencil, Trash2, X, Check } from 'lucide-react';
+import { usePermissions } from '@/lib/usePermissions';
 
 interface User {
     id: string;
@@ -31,6 +32,7 @@ const roleColors: Record<string, string> = {
 export default function UsersPage() {
     const t = useTranslations('nav');
     const tc = useTranslations('common');
+    const { can } = usePermissions();
     const [users, setUsers] = useState<User[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
     const [loading, setLoading] = useState(true);
@@ -105,12 +107,12 @@ export default function UsersPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">{t('users')}</h1>
-                <button
+                {can('users.create') && <button
                     onClick={() => { setShowAdd(true); setEditingId(null); setForm({ name: '', email: '', password: 'password123', role: 'STANDARD_USER', departmentId: '' }); }}
                     className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
                     <Plus className="h-4 w-4" /> {tc('create')}
-                </button>
+                </button>}
             </div>
 
             {/* Add form */}
@@ -200,12 +202,12 @@ export default function UsersPage() {
                                             <td className="px-4 py-3 text-sm text-muted-foreground">{u.department?.name || '-'}</td>
                                             <td className="px-4 py-3 text-end">
                                                 <div className="flex justify-end gap-1">
-                                                    <button onClick={() => startEdit(u)} className="p-1.5 rounded hover:bg-accent transition-colors">
+                                                    {can('users.edit') && <button onClick={() => startEdit(u)} className="p-1.5 rounded hover:bg-accent transition-colors">
                                                         <Pencil className="h-4 w-4 text-muted-foreground" />
-                                                    </button>
-                                                    <button onClick={() => handleDelete(u.id)} className="p-1.5 rounded hover:bg-destructive/10 transition-colors">
+                                                    </button>}
+                                                    {can('users.delete') && <button onClick={() => handleDelete(u.id)} className="p-1.5 rounded hover:bg-destructive/10 transition-colors">
                                                         <Trash2 className="h-4 w-4 text-destructive" />
-                                                    </button>
+                                                    </button>}
                                                 </div>
                                             </td>
                                         </>
