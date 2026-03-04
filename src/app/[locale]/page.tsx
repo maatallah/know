@@ -42,6 +42,7 @@ export default function DashboardPage() {
     const t = useTranslations('dashboard');
     const tk = useTranslations('knowledge');
     const tc = useTranslations('common');
+    const tu = useTranslations('users');
     const [data, setData] = useState<DashboardData | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -76,10 +77,10 @@ export default function DashboardPage() {
 
             {/* Status Breakdown */}
             <div className="grid gap-4 sm:grid-cols-4">
-                <MiniCard label="Drafts" value={data.drafts} icon={<FileEdit className="h-4 w-4" />} />
+                <MiniCard label={t('drafts')} value={data.drafts} icon={<FileEdit className="h-4 w-4" />} />
                 <MiniCard label={t('inReview')} value={data.inReview} icon={<Clock className="h-4 w-4" />} />
-                <MiniCard label="Approved" value={data.approved} icon={<CheckCircle2 className="h-4 w-4" />} />
-                <MiniCard label="Archived" value={data.archived} icon={<Archive className="h-4 w-4" />} />
+                <MiniCard label={t('approved')} value={data.approved} icon={<CheckCircle2 className="h-4 w-4" />} />
+                <MiniCard label={t('archived')} value={data.archived} icon={<Archive className="h-4 w-4" />} />
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
@@ -155,7 +156,7 @@ export default function DashboardPage() {
                                         </div>
                                         <div>
                                             <p className="text-sm font-medium">{user.name}</p>
-                                            <p className="text-xs text-muted-foreground">{user.role.replace('_', ' ')}</p>
+                                            <p className="text-xs text-muted-foreground">{tu(`roles.${user.role}`)}</p>
                                         </div>
                                     </div>
                                     <span className="text-sm font-bold">{user.itemCount}</span>
@@ -177,8 +178,8 @@ export default function DashboardPage() {
                         </div>
                         <p className="text-sm text-muted-foreground">
                             {data.nearExpiry === 0
-                                ? 'No items expiring within the next 30 days.'
-                                : `${data.nearExpiry} item(s) expiring within the next 30 days.`}
+                                ? t('noExpiringSoon')
+                                : t('expiringSoon', { count: data.nearExpiry })}
                         </p>
                     </div>
                 </div>

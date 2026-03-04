@@ -71,7 +71,9 @@
         "contributionStats": "المساهمات",
         "drafts": "مسودات",
         "approved": "معتمدة",
-        "archived": "مؤرشفة"
+        "archived": "مؤرشفة",
+        "noExpiringSoon": "لا توجد عناصر تنتهي صلاحيتها خلال 30 يومًا.",
+        "expiringSoon": "{count} عنصر(عناصر) تنتهي صلاحيتها خلال 30 يومًا."
     },
     "knowledge": {
         "title": "قاعدة المعرفة",

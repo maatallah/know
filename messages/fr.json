@@ -71,7 +71,9 @@
         "contributionStats": "Contributions",
         "drafts": "Brouillons",
         "approved": "Approuvés",
-        "archived": "Archivés"
+        "archived": "Archivés",
+        "noExpiringSoon": "Aucun article n'expire dans les 30 prochains jours.",
+        "expiringSoon": "{count} article(s) expirant dans les 30 prochains jours."
     },
     "knowledge": {
         "title": "Base de connaissances",

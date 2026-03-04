@@ -71,7 +71,9 @@
         "contributionStats": "Contributions",
         "drafts": "Drafts",
         "approved": "Approved",
-        "archived": "Archived"
+        "archived": "Archived",
+        "noExpiringSoon": "No items expiring within the next 30 days.",
+        "expiringSoon": "{count} item(s) expiring within the next 30 days."
     },
     "knowledge": {
         "title": "Knowledge Base",
