@@ -64,7 +64,7 @@ export default function GapDetailPage() {
         <div className="space-y-6">
             <div className="flex items-start gap-4">
                 <Link href="/gaps" className="mt-1 rounded-lg p-2 hover:bg-accent transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
+                    <ArrowLeft className="h-5 w-5 rtl:-scale-x-100" />
                 </Link>
                 <div>
                     <div className="flex items-center gap-2">

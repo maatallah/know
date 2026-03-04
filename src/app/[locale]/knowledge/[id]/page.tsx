@@ -135,7 +135,7 @@ export default function KnowledgeDetailPage() {
             {/* Back + Title */}
             <div className="flex items-start gap-4">
                 <Link href="/knowledge" className="mt-1 rounded-lg p-2 hover:bg-accent transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
+                    <ArrowLeft className="h-5 w-5 rtl:-scale-x-100" />
                 </Link>
                 <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2">
