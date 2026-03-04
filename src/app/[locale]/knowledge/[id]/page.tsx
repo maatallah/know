@@ -279,12 +279,15 @@ export default function KnowledgeDetailPage() {
 
             {/* Tags */}
             {item.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                    {item.tags.map((tag) => (
-                        <span key={tag.id} className="rounded-full bg-secondary px-3 py-1 text-xs font-medium">
-                            {tag.name}
-                        </span>
-                    ))}
+                <div className="rounded-xl border border-border bg-card p-6">
+                    <h2 className="text-lg font-semibold mb-3">{t('tags')}</h2>
+                    <div className="flex flex-wrap gap-2">
+                        {item.tags.map((tag) => (
+                            <span key={tag.id} className="rounded-full bg-secondary px-3 py-1 text-xs font-medium border border-border/50 text-secondary-foreground">
+                                {tag.name}
+                            </span>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
