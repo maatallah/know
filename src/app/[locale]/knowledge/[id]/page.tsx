@@ -177,9 +177,11 @@ export default function KnowledgeDetailPage() {
                             {latestVersion.author.name}
                         </span>
                     </div>
-                    <ReactMarkdown className="prose dark:prose-invert max-w-none text-sm">
-                        {latestVersion.content}
-                    </ReactMarkdown>
+                    <div className="prose dark:prose-invert max-w-none text-sm">
+                        <ReactMarkdown>
+                            {latestVersion.content || ''}
+                        </ReactMarkdown>
+                    </div>
                     {latestVersion.approvalComment && (
                         <div className="mt-4 rounded-lg bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 p-3 text-sm">
                             <strong>{t('approval')}:</strong> {latestVersion.approvalComment}
