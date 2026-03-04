@@ -179,7 +179,7 @@ export default function KnowledgeDetailPage() {
                     </div>
                     <div className="prose dark:prose-invert max-w-none text-sm">
                         <ReactMarkdown>
-                            {latestVersion.content || ''}
+                            {(latestVersion.content || '').replace(/\\n/g, '\n')}
                         </ReactMarkdown>
                     </div>
                     {latestVersion.approvalComment && (
