@@ -198,7 +198,7 @@ export default function KnowledgeDetailPage() {
                     <button
                         onClick={() => handleWorkflow('submit-review')}
                         disabled={actionLoading}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
                     >
                         {t('submitReview')}
                     </button>
@@ -215,7 +215,7 @@ export default function KnowledgeDetailPage() {
                         <button
                             onClick={() => handleWorkflow('approve')}
                             disabled={actionLoading}
-                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-green-50 hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
                             {t('approve')}
                         </button>
@@ -226,7 +226,7 @@ export default function KnowledgeDetailPage() {
                     <button
                         onClick={() => handleWorkflow('archive')}
                         disabled={actionLoading}
-                        className="rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                        className="rounded-lg bg-muted px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/80 disabled:opacity-50 transition-colors"
                     >
                         {t('archive')}
                     </button>

@@ -108,7 +108,7 @@ export default function GapDetailPage() {
                         <button
                             onClick={() => updateStatus('ASSIGNED')}
                             disabled={actionLoading}
-                            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
                         >
                             Mark as Assigned
                         </button>
@@ -117,7 +117,7 @@ export default function GapDetailPage() {
                         <button
                             onClick={() => updateStatus('CLOSED')}
                             disabled={actionLoading}
-                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-green-50 hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
                             Close
                         </button>
