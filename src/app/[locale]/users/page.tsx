@@ -32,6 +32,7 @@ const roleColors: Record<string, string> = {
 export default function UsersPage() {
     const t = useTranslations('nav');
     const tc = useTranslations('common');
+    const tu = useTranslations('users');
     const { can } = usePermissions();
     const [users, setUsers] = useState<User[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -93,7 +94,7 @@ export default function UsersPage() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Delete this user?')) return;
+        if (!confirm(tu('deleteUser'))) return;
         const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
         if (res.ok) {
             setUsers((prev) => prev.filter((u) => u.id !== id));
@@ -118,16 +119,16 @@ export default function UsersPage() {
             {/* Add form */}
             {showAdd && (
                 <div className="rounded-xl border border-primary/30 bg-card p-5 space-y-3">
-                    <h3 className="font-semibold">New User</h3>
+                    <h3 className="font-semibold">{tu('newUser')}</h3>
                     <div className="grid gap-3 sm:grid-cols-2">
-                        <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Full name" className="input-field" autoFocus />
-                        <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="input-field" />
-                        <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Password" className="input-field" />
+                        <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tc('fullName')} className="input-field" autoFocus />
+                        <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={tc('email')} className="input-field" />
+                        <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder={tc('password')} className="input-field" />
                         <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="input-field">
-                            {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, ' ')}</option>)}
+                            {ROLES.map((r) => <option key={r} value={r}>{tu(`roles.${r}`)}</option>)}
                         </select>
                         <select value={form.departmentId} onChange={(e) => setForm({ ...form, departmentId: e.target.value })} className="input-field">
-                            <option value="">No department</option>
+                            <option value="">{tc('noDepartment')}</option>
                             {departments.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
                         </select>
                     </div>
@@ -149,10 +150,10 @@ export default function UsersPage() {
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-border bg-muted/50">
-                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">Name</th>
-                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">Email</th>
-                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">Role</th>
-                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">Department</th>
+                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">{tc('name')}</th>
+                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">{tc('email')}</th>
+                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">{tc('role')}</th>
+                                <th className="px-4 py-3 text-start text-sm font-medium text-muted-foreground">{tc('department')}</th>
                                 <th className="px-4 py-3 text-end text-sm font-medium text-muted-foreground">{tc('actions')}</th>
                             </tr>
                         </thead>
@@ -167,12 +168,12 @@ export default function UsersPage() {
                                             <td className="px-4 py-3 text-sm text-muted-foreground">{u.email}</td>
                                             <td className="px-4 py-3">
                                                 <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="input-field">
-                                                    {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, ' ')}</option>)}
+                                                    {ROLES.map((r) => <option key={r} value={r}>{tu(`roles.${r}`)}</option>)}
                                                 </select>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <select value={form.departmentId} onChange={(e) => setForm({ ...form, departmentId: e.target.value })} className="input-field">
-                                                    <option value="">None</option>
+                                                    <option value="">{tc('none')}</option>
                                                     {departments.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
                                                 </select>
                                             </td>
@@ -190,13 +191,13 @@ export default function UsersPage() {
                                                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">
                                                         {(u.name || u.email)[0].toUpperCase()}
                                                     </div>
-                                                    <span className="text-sm font-medium">{u.name || 'Unnamed'}</span>
+                                                    <span className="text-sm font-medium">{u.name || tu('unnamed')}</span>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3 text-sm text-muted-foreground">{u.email}</td>
                                             <td className="px-4 py-3">
                                                 <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', roleColors[u.role] || roleColors.STANDARD_USER)}>
-                                                    {u.role.replace(/_/g, ' ')}
+                                                    {tu(`roles.${u.role}`)}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-sm text-muted-foreground">{u.department?.name || '-'}</td>

@@ -189,7 +189,7 @@ export default function KnowledgeDetailPage() {
 
             {/* Workflow Actions */}
             <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-                <h2 className="text-lg font-semibold">Workflow Actions</h2>
+                <h2 className="text-lg font-semibold">{t('workflow')}</h2>
 
                 {item.status === 'DRAFT' && (
                     <button
@@ -197,7 +197,7 @@ export default function KnowledgeDetailPage() {
                         disabled={actionLoading}
                         className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
-                        Submit for Review
+                        {t('submitReview')}
                     </button>
                 )}
 
@@ -214,7 +214,7 @@ export default function KnowledgeDetailPage() {
                             disabled={actionLoading}
                             className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
-                            Approve
+                            {t('approve')}
                         </button>
                     </div>
                 )}
@@ -225,7 +225,7 @@ export default function KnowledgeDetailPage() {
                         disabled={actionLoading}
                         className="rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
                     >
-                        Archive
+                        {t('archive')}
                     </button>
                 )}
 
@@ -238,10 +238,10 @@ export default function KnowledgeDetailPage() {
             <div className="rounded-xl border border-border bg-card p-6 space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold flex items-center gap-2">
-                        <Paperclip className="h-4 w-4" /> Attachments ({attachments.length})
+                        <Paperclip className="h-4 w-4" /> {tc('attachments')} ({attachments.length})
                     </h2>
                     <label className="cursor-pointer rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80 transition-colors">
-                        {uploading ? '...' : 'Upload'}
+                        {uploading ? '...' : tc('uploadFile')}
                         <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
                     </label>
                 </div>
@@ -256,7 +256,7 @@ export default function KnowledgeDetailPage() {
                                     <div>
                                         <p className="text-sm font-medium">{att.fileName}</p>
                                         <p className="text-xs text-muted-foreground">
-                                            {(att.fileSize / 1024).toFixed(0)} KB · {att.downloadCount} downloads
+                                            {(att.fileSize / 1024).toFixed(0)} KB · {att.downloadCount} {tc('downloads')}
                                         </p>
                                     </div>
                                 </div>

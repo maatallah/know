@@ -16,7 +16,28 @@
         "actions": "Actions",
         "status": "Statut",
         "createdAt": "Créé le",
-        "updatedAt": "Mis à jour le"
+        "updatedAt": "Mis à jour le",
+        "name": "Nom",
+        "email": "Email",
+        "role": "Rôle",
+        "department": "Département",
+        "description": "Description",
+        "serialNumber": "Numéro de série",
+        "password": "Mot de passe",
+        "fullName": "Nom complet",
+        "all": "Tous",
+        "none": "Aucun",
+        "select": "Sélectionner...",
+        "selectDepartment": "Sélectionner un département...",
+        "noDepartment": "Sans département",
+        "deleteConfirm": "Supprimer cet élément ?",
+        "forbidden": "Vous n'avez pas la permission d'effectuer cette action",
+        "notFound": "Page non trouvée",
+        "notFoundDesc": "La page que vous recherchez n'existe pas ou a été déplacée.",
+        "backToDashboard": "Retour au tableau de bord",
+        "downloads": "téléchargements",
+        "uploadFile": "Télécharger un fichier",
+        "attachments": "Pièces jointes"
     },
     "nav": {
         "dashboard": "Tableau de bord",
@@ -47,7 +68,10 @@
         "nearExpiry": "Proche de l'expiration",
         "mostViewed": "Les plus consultés",
         "gapsSubmitted": "Lacunes soumises",
-        "contributionStats": "Contributions"
+        "contributionStats": "Contributions",
+        "drafts": "Brouillons",
+        "approved": "Approuvés",
+        "archived": "Archivés"
     },
     "knowledge": {
         "title": "Base de connaissances",
@@ -65,6 +89,20 @@
         "viewCount": "Vues",
         "healthScore": "Score de santé",
         "version": "Version",
+        "shortDescription": "Description courte",
+        "estimatedTime": "Temps estimé (minutes)",
+        "requiredTools": "Outils requis",
+        "preconditions": "Prérequis",
+        "expectedOutcome": "Résultat attendu",
+        "content": "Contenu (Markdown)",
+        "contentPlaceholder": "# Titre de la procédure\n\n## Étape 1\n...",
+        "submitReview": "Soumettre à la révision",
+        "approve": "Approuver",
+        "archive": "Archiver",
+        "addComment": "Ajouter un commentaire...",
+        "postComment": "Publier le commentaire",
+        "comments": "Commentaires",
+        "workflow": "Flux de travail",
         "types": {
             "MACHINE_PROCEDURE": "Procédure machine",
             "WORK_INSTRUCTION": "Instruction de travail",
@@ -95,7 +133,45 @@
         "submit": "Soumettre la demande",
         "statusOpen": "Ouvert",
         "statusAssigned": "Assigné",
-        "statusClosed": "Fermé"
+        "statusClosed": "Fermé",
+        "submittedBy": "Soumis par",
+        "assignedTo": "Assigné à",
+        "linkedItem": "Article lié",
+        "assign": "Assigner",
+        "closeGap": "Fermer"
+    },
+    "departments": {
+        "newDepartment": "Nouveau département",
+        "departmentName": "Nom du département",
+        "descriptionOptional": "Description (facultative)",
+        "users": "utilisateurs",
+        "machines": "machines",
+        "items": "articles",
+        "deleteDepartment": "Supprimer ce département ?"
+    },
+    "machines": {
+        "newMachine": "Nouvelle machine",
+        "machineName": "Nom de la machine",
+        "serialNumberOptional": "Numéro de série (facultatif)",
+        "deleteMachine": "Supprimer cette machine ?"
+    },
+    "users": {
+        "newUser": "Nouvel utilisateur",
+        "deleteUser": "Supprimer cet utilisateur ?",
+        "unnamed": "Sans nom",
+        "roles": {
+            "SUPER_ADMIN": "Super Admin",
+            "DEPARTMENT_MANAGER": "Chef de département",
+            "EXPERT": "Expert",
+            "REVIEWER": "Réviseur",
+            "STANDARD_USER": "Utilisateur standard"
+        }
+    },
+    "audit": {
+        "time": "Heure",
+        "action": "Action",
+        "entity": "Entité",
+        "user": "Utilisateur"
     },
     "theme": {
         "light": "Clair",

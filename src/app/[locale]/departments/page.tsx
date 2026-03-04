@@ -16,6 +16,7 @@ interface Department {
 export default function DepartmentsPage() {
     const t = useTranslations('nav');
     const tc = useTranslations('common');
+    const td = useTranslations('departments');
     const { can } = usePermissions();
     const [departments, setDepartments] = useState<Department[]>([]);
     const [loading, setLoading] = useState(true);
@@ -77,7 +78,7 @@ export default function DepartmentsPage() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Delete this department?')) return;
+        if (!confirm(td('deleteDepartment'))) return;
         const res = await fetch(`/api/departments/${id}`, { method: 'DELETE' });
         if (res.ok) {
             setDepartments((prev) => prev.filter((d) => d.id !== id));
@@ -102,12 +103,12 @@ export default function DepartmentsPage() {
             {/* Add form */}
             {showAdd && (
                 <div className="rounded-xl border border-primary/30 bg-card p-5 space-y-3">
-                    <h3 className="font-semibold">New Department</h3>
+                    <h3 className="font-semibold">{td('newDepartment')}</h3>
                     <input
                         type="text"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        placeholder="Department name"
+                        placeholder={td('departmentName')}
                         className="input-field"
                         autoFocus
                     />
@@ -115,7 +116,7 @@ export default function DepartmentsPage() {
                         type="text"
                         value={form.description}
                         onChange={(e) => setForm({ ...form, description: e.target.value })}
-                        placeholder="Description (optional)"
+                        placeholder={td('descriptionOptional')}
                         className="input-field"
                     />
                     <div className="flex gap-2">
@@ -152,7 +153,7 @@ export default function DepartmentsPage() {
                                         type="text"
                                         value={form.description}
                                         onChange={(e) => setForm({ ...form, description: e.target.value })}
-                                        placeholder="Description"
+                                        placeholder={tc('description')}
                                         className="input-field"
                                     />
                                     <div className="flex gap-2">
@@ -181,9 +182,9 @@ export default function DepartmentsPage() {
                                     {d.description && <p className="text-sm text-muted-foreground mb-2">{d.description}</p>}
                                     {d._count && (
                                         <div className="flex gap-3 text-xs text-muted-foreground">
-                                            <span>{d._count.users} users</span>
-                                            <span>{d._count.machines} machines</span>
-                                            <span>{d._count.knowledgeItems} items</span>
+                                            <span>{d._count.users} {td('users')}</span>
+                                            <span>{d._count.machines} {td('machines')}</span>
+                                            <span>{d._count.knowledgeItems} {td('items')}</span>
                                         </div>
                                     )}
                                 </>

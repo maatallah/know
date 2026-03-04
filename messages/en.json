@@ -16,7 +16,28 @@
         "actions": "Actions",
         "status": "Status",
         "createdAt": "Created At",
-        "updatedAt": "Updated At"
+        "updatedAt": "Updated At",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "department": "Department",
+        "description": "Description",
+        "serialNumber": "Serial Number",
+        "password": "Password",
+        "fullName": "Full name",
+        "all": "All",
+        "none": "None",
+        "select": "Select...",
+        "selectDepartment": "Select department...",
+        "noDepartment": "No department",
+        "deleteConfirm": "Delete this item?",
+        "forbidden": "You do not have permission to perform this action",
+        "notFound": "Page not found",
+        "notFoundDesc": "The page you are looking for does not exist or has been moved.",
+        "backToDashboard": "Back to Dashboard",
+        "downloads": "downloads",
+        "uploadFile": "Upload file",
+        "attachments": "Attachments"
     },
     "nav": {
         "dashboard": "Dashboard",
@@ -47,7 +68,10 @@
         "nearExpiry": "Near Expiry",
         "mostViewed": "Most Viewed",
         "gapsSubmitted": "Gaps Submitted",
-        "contributionStats": "Contributions"
+        "contributionStats": "Contributions",
+        "drafts": "Drafts",
+        "approved": "Approved",
+        "archived": "Archived"
     },
     "knowledge": {
         "title": "Knowledge Base",
@@ -65,6 +89,20 @@
         "viewCount": "Views",
         "healthScore": "Health Score",
         "version": "Version",
+        "shortDescription": "Short Description",
+        "estimatedTime": "Estimated Time (minutes)",
+        "requiredTools": "Required Tools",
+        "preconditions": "Preconditions",
+        "expectedOutcome": "Expected Outcome",
+        "content": "Content (Markdown)",
+        "contentPlaceholder": "# Procedure Title\n\n## Step 1\n...",
+        "submitReview": "Submit for Review",
+        "approve": "Approve",
+        "archive": "Archive",
+        "addComment": "Add a comment...",
+        "postComment": "Post Comment",
+        "comments": "Comments",
+        "workflow": "Workflow",
         "types": {
             "MACHINE_PROCEDURE": "Machine Procedure",
             "WORK_INSTRUCTION": "Work Instruction",
@@ -95,7 +133,45 @@
         "submit": "Submit Request",
         "statusOpen": "Open",
         "statusAssigned": "Assigned",
-        "statusClosed": "Closed"
+        "statusClosed": "Closed",
+        "submittedBy": "Submitted by",
+        "assignedTo": "Assigned to",
+        "linkedItem": "Linked Item",
+        "assign": "Assign",
+        "closeGap": "Close"
+    },
+    "departments": {
+        "newDepartment": "New Department",
+        "departmentName": "Department name",
+        "descriptionOptional": "Description (optional)",
+        "users": "users",
+        "machines": "machines",
+        "items": "items",
+        "deleteDepartment": "Delete this department?"
+    },
+    "machines": {
+        "newMachine": "New Machine",
+        "machineName": "Machine name",
+        "serialNumberOptional": "Serial number (optional)",
+        "deleteMachine": "Delete this machine?"
+    },
+    "users": {
+        "newUser": "New User",
+        "deleteUser": "Delete this user?",
+        "unnamed": "Unnamed",
+        "roles": {
+            "SUPER_ADMIN": "Super Admin",
+            "DEPARTMENT_MANAGER": "Dept. Manager",
+            "EXPERT": "Expert",
+            "REVIEWER": "Reviewer",
+            "STANDARD_USER": "Standard User"
+        }
+    },
+    "audit": {
+        "time": "Time",
+        "action": "Action",
+        "entity": "Entity",
+        "user": "User"
     },
     "theme": {
         "light": "Light",

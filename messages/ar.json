@@ -16,7 +16,28 @@
         "actions": "إجراءات",
         "status": "الحالة",
         "createdAt": "تاريخ الإنشاء",
-        "updatedAt": "تاريخ التحديث"
+        "updatedAt": "تاريخ التحديث",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "role": "الدور",
+        "department": "القسم",
+        "description": "الوصف",
+        "serialNumber": "الرقم التسلسلي",
+        "password": "كلمة المرور",
+        "fullName": "الاسم الكامل",
+        "all": "الكل",
+        "none": "بدون",
+        "select": "اختر...",
+        "selectDepartment": "اختر القسم...",
+        "noDepartment": "بدون قسم",
+        "deleteConfirm": "هل تريد حذف هذا العنصر؟",
+        "forbidden": "ليس لديك صلاحية لتنفيذ هذا الإجراء",
+        "notFound": "الصفحة غير موجودة",
+        "notFoundDesc": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+        "backToDashboard": "العودة إلى لوحة القيادة",
+        "downloads": "تحميلات",
+        "uploadFile": "رفع ملف",
+        "attachments": "المرفقات"
     },
     "nav": {
         "dashboard": "لوحة القيادة",
@@ -47,7 +68,10 @@
         "nearExpiry": "قريبة من الانتهاء",
         "mostViewed": "الأكثر مشاهدة",
         "gapsSubmitted": "الفجوات المقدمة",
-        "contributionStats": "المساهمات"
+        "contributionStats": "المساهمات",
+        "drafts": "مسودات",
+        "approved": "معتمدة",
+        "archived": "مؤرشفة"
     },
     "knowledge": {
         "title": "قاعدة المعرفة",
@@ -65,6 +89,20 @@
         "viewCount": "المشاهدات",
         "healthScore": "نقاط الصحة",
         "version": "الإصدار",
+        "shortDescription": "وصف مختصر",
+        "estimatedTime": "الوقت المقدر (بالدقائق)",
+        "requiredTools": "الأدوات المطلوبة",
+        "preconditions": "الشروط المسبقة",
+        "expectedOutcome": "النتيجة المتوقعة",
+        "content": "المحتوى (ماركداون)",
+        "contentPlaceholder": "# عنوان الإجراء\n\n## الخطوة 1\n...",
+        "submitReview": "تقديم للمراجعة",
+        "approve": "اعتماد",
+        "archive": "أرشفة",
+        "addComment": "أضف تعليقاً...",
+        "postComment": "نشر التعليق",
+        "comments": "التعليقات",
+        "workflow": "سير العمل",
         "types": {
             "MACHINE_PROCEDURE": "إجراء الآلة",
             "WORK_INSTRUCTION": "تعليمات العمل",
@@ -95,7 +133,45 @@
         "submit": "تقديم الطلب",
         "statusOpen": "مفتوح",
         "statusAssigned": "مُعيّن",
-        "statusClosed": "مغلق"
+        "statusClosed": "مغلق",
+        "submittedBy": "مقدم من",
+        "assignedTo": "مُعيّن إلى",
+        "linkedItem": "العنصر المرتبط",
+        "assign": "تعيين",
+        "closeGap": "إغلاق"
+    },
+    "departments": {
+        "newDepartment": "قسم جديد",
+        "departmentName": "اسم القسم",
+        "descriptionOptional": "الوصف (اختياري)",
+        "users": "مستخدمون",
+        "machines": "آلات",
+        "items": "عناصر",
+        "deleteDepartment": "هل تريد حذف هذا القسم؟"
+    },
+    "machines": {
+        "newMachine": "آلة جديدة",
+        "machineName": "اسم الآلة",
+        "serialNumberOptional": "الرقم التسلسلي (اختياري)",
+        "deleteMachine": "هل تريد حذف هذه الآلة؟"
+    },
+    "users": {
+        "newUser": "مستخدم جديد",
+        "deleteUser": "هل تريد حذف هذا المستخدم؟",
+        "unnamed": "بدون اسم",
+        "roles": {
+            "SUPER_ADMIN": "مدير عام",
+            "DEPARTMENT_MANAGER": "مدير قسم",
+            "EXPERT": "خبير",
+            "REVIEWER": "مراجع",
+            "STANDARD_USER": "مستخدم عادي"
+        }
+    },
+    "audit": {
+        "time": "الوقت",
+        "action": "الإجراء",
+        "entity": "الكيان",
+        "user": "المستخدم"
     },
     "theme": {
         "light": "فاتح",

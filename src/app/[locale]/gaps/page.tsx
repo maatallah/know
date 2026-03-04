@@ -62,7 +62,7 @@ export default function GapsPage() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-                <option value="">All</option>
+                <option value="">{tc('all')}</option>
                 <option value="OPEN">{t('statusOpen')}</option>
                 <option value="ASSIGNED">{t('statusAssigned')}</option>
                 <option value="CLOSED">{t('statusClosed')}</option>
@@ -93,7 +93,7 @@ export default function GapsPage() {
                                         <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', gapStatusColors[gap.status])}>
                                             {t(`status${gap.status.charAt(0) + gap.status.slice(1).toLowerCase()}`)}
                                         </span>
-                                        <span className="text-xs text-muted-foreground">by {gap.submittedBy.name}</span>
+                                        <span className="text-xs text-muted-foreground">{gap.submittedBy.name}</span>
                                     </div>
                                 </div>
                                 {gap.assignedTo && (

@@ -148,7 +148,7 @@ export default function NewKnowledgePage() {
                             className="input-field"
                         >
                             {CRITICALITY_LEVELS.map((c) => (
-                                <option key={c} value={c}>{c}</option>
+                                <option key={c} value={c}>{t(`riskLevels.${c}`)}</option>
                             ))}
                         </select>
                     </FormField>
@@ -163,7 +163,7 @@ export default function NewKnowledgePage() {
                             required
                             className="input-field"
                         >
-                            <option value="">Select...</option>
+                            <option value="">{tc('select')}</option>
                             {departments.map((d) => (
                                 <option key={d.id} value={d.id}>{d.name}</option>
                             ))}
@@ -176,7 +176,7 @@ export default function NewKnowledgePage() {
                             onChange={(e) => update('machineId', e.target.value)}
                             className="input-field"
                         >
-                            <option value="">None</option>
+                            <option value="">{tc('none')}</option>
                             {machines.map((m) => (
                                 <option key={m.id} value={m.id}>{m.name}</option>
                             ))}
@@ -185,7 +185,7 @@ export default function NewKnowledgePage() {
                 </div>
 
                 {/* Estimated Time */}
-                <FormField label="Estimated Time (minutes)">
+                <FormField label={t('estimatedTime')}>
                     <input
                         type="number"
                         value={form.estimatedTimeMin}
@@ -196,7 +196,7 @@ export default function NewKnowledgePage() {
                 </FormField>
 
                 {/* Tools, Preconditions, Outcome */}
-                <FormField label="Required Tools">
+                <FormField label={t('requiredTools')}>
                     <input
                         type="text"
                         value={form.requiredTools}
@@ -205,7 +205,7 @@ export default function NewKnowledgePage() {
                     />
                 </FormField>
 
-                <FormField label="Preconditions">
+                <FormField label={t('preconditions')}>
                     <textarea
                         value={form.preconditions}
                         onChange={(e) => update('preconditions', e.target.value)}
@@ -214,7 +214,7 @@ export default function NewKnowledgePage() {
                     />
                 </FormField>
 
-                <FormField label="Expected Outcome">
+                <FormField label={t('expectedOutcome')}>
                     <textarea
                         value={form.expectedOutcome}
                         onChange={(e) => update('expectedOutcome', e.target.value)}
@@ -224,7 +224,7 @@ export default function NewKnowledgePage() {
                 </FormField>
 
                 {/* Content (Markdown) */}
-                <FormField label="Content (Markdown)" required>
+                <FormField label={t('content')} required>
                     <textarea
                         value={form.content}
                         onChange={(e) => update('content', e.target.value)}

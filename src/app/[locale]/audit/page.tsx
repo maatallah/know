@@ -26,6 +26,7 @@ const actionColors: Record<string, string> = {
 export default function AuditPage() {
     const t = useTranslations('nav');
     const tc = useTranslations('common');
+    const ta = useTranslations('audit');
     const [entries, setEntries] = useState<AuditEntry[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -62,7 +63,7 @@ export default function AuditPage() {
                                 </span>
                             </div>
                             <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                                <span>by {entry.user.name || 'Unknown'}</span>
+                                <span>{entry.user.name || '-'}</span>
                                 <span>·</span>
                                 <span className="font-mono text-xs">{entry.entityId.slice(0, 8)}...</span>
                             </div>

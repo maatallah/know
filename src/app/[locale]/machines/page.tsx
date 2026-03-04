@@ -21,6 +21,7 @@ interface Department {
 export default function MachinesPage() {
     const t = useTranslations('nav');
     const tc = useTranslations('common');
+    const tm = useTranslations('machines');
     const { can } = usePermissions();
     const [machines, setMachines] = useState<Machine[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -83,7 +84,7 @@ export default function MachinesPage() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Delete this machine?')) return;
+        if (!confirm(tm('deleteMachine'))) return;
         const res = await fetch(`/api/machines/${id}`, { method: 'DELETE' });
         if (res.ok) {
             setMachines((prev) => prev.filter((m) => m.id !== id));
@@ -99,7 +100,7 @@ export default function MachinesPage() {
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Machine name"
+                placeholder={tm('machineName')}
                 className="input-field"
                 autoFocus
             />
@@ -107,7 +108,7 @@ export default function MachinesPage() {
                 type="text"
                 value={form.serialNumber}
                 onChange={(e) => setForm({ ...form, serialNumber: e.target.value })}
-                placeholder="Serial number (optional)"
+                placeholder={tm('serialNumberOptional')}
                 className="input-field"
             />
             <select
@@ -115,7 +116,7 @@ export default function MachinesPage() {
                 onChange={(e) => setForm({ ...form, departmentId: e.target.value })}
                 className="input-field"
             >
-                <option value="">Select department...</option>
+                <option value="">{tc('selectDepartment')}</option>
                 {departments.map((d) => (
                     <option key={d.id} value={d.id}>{d.name}</option>
                 ))}
@@ -145,7 +146,7 @@ export default function MachinesPage() {
 
             {showAdd && (
                 <div className="rounded-xl border border-primary/30 bg-card p-5">
-                    <h3 className="font-semibold mb-3">New Machine</h3>
+                    <h3 className="font-semibold mb-3">{tm('newMachine')}</h3>
                     {formFields}
                 </div>
             )}
