@@ -91,6 +91,7 @@
         "viewCount": "Views",
         "healthScore": "Health Score",
         "version": "Version",
+        "approval": "Approval",
         "shortDescription": "Short Description",
         "estimatedTime": "Estimated Time (minutes)",
         "requiredTools": "Required Tools",

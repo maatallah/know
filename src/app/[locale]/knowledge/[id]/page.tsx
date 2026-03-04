@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, Eye, Clock, Shield, AlertTriangle, Paperclip, Download, Trash2 } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import ReactMarkdown from 'react-markdown';
 
 interface KnowledgeDetail {
     id: string;
@@ -162,9 +163,9 @@ export default function KnowledgeDetailPage() {
                 <InfoRow label={t('department')} value={item.department.name} />
                 {item.machine && <InfoRow label={t('machine')} value={item.machine.name} />}
                 {item.owner.name && <InfoRow label={t('owner')} value={item.owner.name} />}
-                {item.requiredTools && <InfoRow label="Required Tools" value={item.requiredTools} />}
-                {item.preconditions && <InfoRow label="Preconditions" value={item.preconditions} />}
-                {item.expectedOutcome && <InfoRow label="Expected Outcome" value={item.expectedOutcome} />}
+                {item.requiredTools && <InfoRow label={t('requiredTools')} value={item.requiredTools} />}
+                {item.preconditions && <InfoRow label={t('preconditions')} value={item.preconditions} />}
+                {item.expectedOutcome && <InfoRow label={t('expectedOutcome')} value={item.expectedOutcome} />}
             </div>
 
             {/* Content */}
@@ -176,12 +177,12 @@ export default function KnowledgeDetailPage() {
                             {latestVersion.author.name}
                         </span>
                     </div>
-                    <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap text-sm">
+                    <ReactMarkdown className="prose dark:prose-invert max-w-none text-sm">
                         {latestVersion.content}
-                    </div>
+                    </ReactMarkdown>
                     {latestVersion.approvalComment && (
-                        <div className="mt-4 rounded-lg bg-green-50 dark:bg-green-900/20 p-3 text-sm">
-                            <strong>Approval:</strong> {latestVersion.approvalComment}
+                        <div className="mt-4 rounded-lg bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 p-3 text-sm">
+                            <strong>{t('approval')}:</strong> {latestVersion.approvalComment}
                         </div>
                     )}
                 </div>
