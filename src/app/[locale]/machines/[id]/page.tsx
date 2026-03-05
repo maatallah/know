@@ -113,17 +113,31 @@ export default function MachineProfilePage() {
         if (!confirm(t('deleteMachine'))) return;
         const res = await fetch(`/api/machines/${id}`, { method: 'DELETE' });
         if (res.ok) {
-            router.push('/machines');
+            router.back();
         } else {
             const err = await res.json();
             alert(err.error);
         }
     }
 
-    function handleDuplicate() {
+    async function handleDuplicate() {
         if (!machine) return;
-        // Navigate to machines list page with query params to pre-fill
-        router.push(`/machines?duplicate=${encodeURIComponent(machine.name)}&dept=${machine.departmentId}`);
+        const res = await fetch('/api/machines', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: `${machine.name} (Copy)`,
+                serialNumber: '',
+                departmentId: machine.departmentId,
+            }),
+        });
+        if (res.ok) {
+            const created = await res.json();
+            router.push(`/machines/${created.id}`);
+        } else {
+            const err = await res.json();
+            alert(err.error || 'Failed to duplicate');
+        }
     }
 
     if (loading) {
