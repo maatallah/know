@@ -1,11 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { ArrowLeft, Settings2, Calendar, FileText, Printer, Pencil, Trash2, Copy, Check, X } from 'lucide-react';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { usePermissions } from '@/lib/usePermissions';
 
 interface KnowledgeItem {
