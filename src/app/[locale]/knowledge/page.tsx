@@ -3,8 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useEffect, useState } from 'react';
+import { Plus, Search, Eye, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Plus, Search, Eye } from 'lucide-react';
 
 interface Tag {
     id: string;
@@ -61,10 +61,11 @@ export default function KnowledgeListPage() {
         fetchItems();
     }, [statusFilter, tagFilter]);
 
-    async function fetchItems() {
+    async function fetchItems(searchOverride?: string) {
         setLoading(true);
         const params = new URLSearchParams();
-        if (search) params.set('search', search);
+        const activeSearch = typeof searchOverride === 'string' ? searchOverride : search;
+        if (activeSearch) params.set('search', activeSearch);
         if (statusFilter) params.set('status', statusFilter);
         if (tagFilter) params.set('tag', tagFilter);
         const res = await fetch(`/api/knowledge?${params}`);
@@ -103,8 +104,21 @@ export default function KnowledgeListPage() {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder={tc('search')}
-                            className="flex h-10 w-full rounded-lg border border-input bg-background ps-10 pe-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            className="flex h-10 w-full rounded-lg border border-input bg-background px-10 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         />
+                        {search && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearch('');
+                                    fetchItems('');
+                                }}
+                                className="absolute end-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors"
+                            >
+                                <X className="h-3.5 w-3.5" />
+                                <span className="sr-only">Clear search</span>
+                            </button>
+                        )}
                     </div>
                     <button
                         type="submit"
@@ -119,7 +133,7 @@ export default function KnowledgeListPage() {
                     onChange={(e) => setTagFilter(e.target.value)}
                     className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                    <option value="">{t('tags')} — All</option>
+                    <option value="">{t('tags')} — {tc('all')}</option>
                     {allTags.map((tag) => (
                         <option key={tag.id} value={tag.id}>
                             {tag.name}
@@ -132,7 +146,7 @@ export default function KnowledgeListPage() {
                     onChange={(e) => setStatusFilter(e.target.value)}
                     className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                    <option value="">{t('status')} — All</option>
+                    <option value="">{t('status')} — {tc('all')}</option>
                     {['DRAFT', 'IN_REVIEW', 'APPROVED', 'ARCHIVED'].map((s) => (
                         <option key={s} value={s}>
                             {t(`statuses.${s}`)}

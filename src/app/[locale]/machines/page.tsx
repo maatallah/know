@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Settings2, Plus, Pencil, Trash2, X, Check, Copy } from 'lucide-react';
 import { usePermissions } from '@/lib/usePermissions';
+import { Link } from '@/i18n/routing';
 
 interface Machine {
     id: string;
@@ -179,7 +180,9 @@ export default function MachinesPage() {
                                                 <Settings2 className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <h3 className="font-semibold">{m.name}</h3>
+                                                <h3 className="font-semibold text-primary hover:underline">
+                                                    <Link href={`/machines/${m.id}`}>{m.name}</Link>
+                                                </h3>
                                                 {m.serialNumber && <p className="text-xs text-muted-foreground">{m.serialNumber}</p>}
                                             </div>
                                         </div>
