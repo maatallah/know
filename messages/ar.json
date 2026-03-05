@@ -156,7 +156,8 @@
         "newMachine": "آلة جديدة",
         "machineName": "اسم الآلة",
         "serialNumberOptional": "الرقم التسلسلي (اختياري)",
-        "deleteMachine": "هل تريد حذف هذه الآلة؟"
+        "deleteMachine": "هل تريد حذف هذه الآلة؟",
+        "duplicateMachine": "تكرار الآلة"
     },
     "users": {
         "newUser": "مستخدم جديد",

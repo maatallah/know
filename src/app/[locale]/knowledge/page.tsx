@@ -6,6 +6,11 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Plus, Search, Eye } from 'lucide-react';
 
+interface Tag {
+    id: string;
+    name: string;
+}
+
 interface KnowledgeItem {
     id: string;
     title: string;
@@ -41,17 +46,27 @@ export default function KnowledgeListPage() {
     const [total, setTotal] = useState(0);
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
+    const [tagFilter, setTagFilter] = useState('');
     const [loading, setLoading] = useState(true);
+    const [allTags, setAllTags] = useState<Tag[]>([]);
+
+    useEffect(() => {
+        fetch('/api/tags')
+            .then(res => res.json())
+            .then(data => setAllTags(data || []))
+            .catch(() => { });
+    }, []);
 
     useEffect(() => {
         fetchItems();
-    }, [statusFilter]);
+    }, [statusFilter, tagFilter]);
 
     async function fetchItems() {
         setLoading(true);
         const params = new URLSearchParams();
         if (search) params.set('search', search);
         if (statusFilter) params.set('status', statusFilter);
+        if (tagFilter) params.set('tag', tagFilter);
         const res = await fetch(`/api/knowledge?${params}`);
         const data = await res.json();
         setItems(data.items || []);
@@ -98,6 +113,19 @@ export default function KnowledgeListPage() {
                         {tc('search')}
                     </button>
                 </form>
+
+                <select
+                    value={tagFilter}
+                    onChange={(e) => setTagFilter(e.target.value)}
+                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                    <option value="">{t('tags')} — All</option>
+                    {allTags.map((tag) => (
+                        <option key={tag.id} value={tag.id}>
+                            {tag.name}
+                        </option>
+                    ))}
+                </select>
 
                 <select
                     value={statusFilter}

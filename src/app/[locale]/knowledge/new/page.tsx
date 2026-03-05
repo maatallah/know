@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { TagSelect, type Tag } from '@/components/tag-select';
 
 interface Department {
     id: string;
@@ -48,6 +49,7 @@ export default function NewKnowledgePage() {
         departmentId: '',
         machineId: '',
         content: '',
+        tags: [] as Tag[],
     });
 
     useEffect(() => {
@@ -75,6 +77,7 @@ export default function NewKnowledgePage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 ...form,
+                tagIds: form.tags.map((t) => t.id),
                 estimatedTimeMin: form.estimatedTimeMin ? parseInt(form.estimatedTimeMin) : null,
             }),
         });
@@ -220,6 +223,14 @@ export default function NewKnowledgePage() {
                         onChange={(e) => update('expectedOutcome', e.target.value)}
                         rows={2}
                         className="input-field min-h-[60px]"
+                    />
+                </FormField>
+
+                {/* Tags */}
+                <FormField label={t('tags')}>
+                    <TagSelect
+                        selectedTags={form.tags}
+                        onChange={(tags) => setForm((prev) => ({ ...prev, tags }))}
                     />
                 </FormField>
 

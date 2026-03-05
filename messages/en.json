@@ -156,7 +156,8 @@
         "newMachine": "New Machine",
         "machineName": "Machine name",
         "serialNumberOptional": "Serial number (optional)",
-        "deleteMachine": "Delete this machine?"
+        "deleteMachine": "Delete this machine?",
+        "duplicateMachine": "Duplicate machine"
     },
     "users": {
         "newUser": "New User",

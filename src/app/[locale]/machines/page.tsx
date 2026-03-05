@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { Settings2, Plus, Pencil, Trash2, X, Check } from 'lucide-react';
+import { Settings2, Plus, Pencil, Trash2, X, Check, Copy } from 'lucide-react';
 import { usePermissions } from '@/lib/usePermissions';
 
 interface Machine {
@@ -45,6 +45,14 @@ export default function MachinesPage() {
         setEditingId(m.id);
         setForm({ name: m.name, serialNumber: m.serialNumber || '', departmentId: m.departmentId });
         setShowAdd(false);
+    }
+
+    function duplicateMachine(m: Machine) {
+        setEditingId(null);
+        setForm({ name: `${m.name} (Copy)`, serialNumber: '', departmentId: m.departmentId });
+        setShowAdd(true);
+        // Scroll to top where the 'new' form is displayed
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function cancelEdit() {
@@ -176,6 +184,9 @@ export default function MachinesPage() {
                                             </div>
                                         </div>
                                         <div className="flex gap-1">
+                                            {can('machines.create') && <button onClick={() => duplicateMachine(m)} className="p-1.5 rounded hover:bg-accent transition-colors" title={tm('duplicateMachine') || 'Duplicate'}>
+                                                <Copy className="h-4 w-4 text-muted-foreground" />
+                                            </button>}
                                             {can('machines.edit') && <button onClick={() => startEdit(m)} className="p-1.5 rounded hover:bg-accent transition-colors">
                                                 <Pencil className="h-4 w-4 text-muted-foreground" />
                                             </button>}

@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
     const type = searchParams.get('type');
     const status = searchParams.get('status');
     const risk = searchParams.get('risk');
+    const tag = searchParams.get('tag');
     const search = searchParams.get('search');
     const sort = searchParams.get('sort') || 'recent';
     const page = parseInt(searchParams.get('page') || '1');
@@ -21,6 +22,7 @@ export async function GET(req: NextRequest) {
     if (type) where.type = type;
     if (status) where.status = status;
     if (risk) where.riskLevel = risk;
+    if (tag) where.tags = { some: { id: tag } };
     if (search) {
         where.OR = [
             { title: { contains: search, mode: 'insensitive' } },
