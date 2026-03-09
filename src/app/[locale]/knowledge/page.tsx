@@ -47,19 +47,28 @@ export default function KnowledgeListPage() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [tagFilter, setTagFilter] = useState('');
+    const [typeFilter, setTypeFilter] = useState('');
+    const [riskFilter, setRiskFilter] = useState('');
+    const [criticalityFilter, setCriticalityFilter] = useState('');
+    const [departmentFilter, setDepartmentFilter] = useState('');
     const [loading, setLoading] = useState(true);
     const [allTags, setAllTags] = useState<Tag[]>([]);
+    const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
 
     useEffect(() => {
         fetch('/api/tags')
             .then(res => res.json())
             .then(data => setAllTags(data || []))
             .catch(() => { });
+        fetch('/api/departments')
+            .then(res => res.json())
+            .then(data => setDepartments(data || []))
+            .catch(() => { });
     }, []);
 
     useEffect(() => {
         fetchItems();
-    }, [statusFilter, tagFilter]);
+    }, [statusFilter, tagFilter, typeFilter, riskFilter, criticalityFilter, departmentFilter]);
 
     async function fetchItems(searchOverride?: string) {
         setLoading(true);
@@ -68,6 +77,10 @@ export default function KnowledgeListPage() {
         if (activeSearch) params.set('search', activeSearch);
         if (statusFilter) params.set('status', statusFilter);
         if (tagFilter) params.set('tag', tagFilter);
+        if (typeFilter) params.set('type', typeFilter);
+        if (riskFilter) params.set('risk', riskFilter);
+        if (criticalityFilter) params.set('criticality', criticalityFilter);
+        if (departmentFilter) params.set('department', departmentFilter);
         const res = await fetch(`/api/knowledge?${params}`);
         const data = await res.json();
         setItems(data.items || []);
@@ -87,15 +100,15 @@ export default function KnowledgeListPage() {
                 <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
                 <Link
                     href="/knowledge/new"
-                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 transition-colors"
                 >
                     <Plus className="h-4 w-4" />
                     {t('createNew')}
                 </Link>
             </div>
 
-            {/* Filters */}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            {/* Search + Filters */}
+            <div className="space-y-3">
                 <form onSubmit={handleSearch} className="flex flex-1 gap-2">
                     <div className="relative flex-1">
                         <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -128,31 +141,85 @@ export default function KnowledgeListPage() {
                     </button>
                 </form>
 
-                <select
-                    value={tagFilter}
-                    onChange={(e) => setTagFilter(e.target.value)}
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                    <option value="">{t('tags')} — {tc('all')}</option>
-                    {allTags.map((tag) => (
-                        <option key={tag.id} value={tag.id}>
-                            {tag.name}
-                        </option>
-                    ))}
-                </select>
+                <div className="flex flex-wrap gap-2">
+                    {/* Status */}
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="">{t('status')} — {tc('all')}</option>
+                        {['DRAFT', 'IN_REVIEW', 'APPROVED', 'ARCHIVED'].map((s) => (
+                            <option key={s} value={s}>
+                                {t(`statuses.${s}`)}
+                            </option>
+                        ))}
+                    </select>
 
-                <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                    <option value="">{t('status')} — {tc('all')}</option>
-                    {['DRAFT', 'IN_REVIEW', 'APPROVED', 'ARCHIVED'].map((s) => (
-                        <option key={s} value={s}>
-                            {t(`statuses.${s}`)}
-                        </option>
-                    ))}
-                </select>
+                    {/* Type */}
+                    <select
+                        value={typeFilter}
+                        onChange={(e) => setTypeFilter(e.target.value)}
+                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="">{t('type')} — {tc('all')}</option>
+                        {['MACHINE_PROCEDURE', 'WORK_INSTRUCTION', 'MAINTENANCE_GUIDE', 'TROUBLESHOOTING', 'SAFETY_INSTRUCTION', 'TRAINING_GUIDE'].map((tp) => (
+                            <option key={tp} value={tp}>
+                                {t(`types.${tp}`)}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Risk Level */}
+                    <select
+                        value={riskFilter}
+                        onChange={(e) => setRiskFilter(e.target.value)}
+                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="">{t('riskLevel')} — {tc('all')}</option>
+                        {['LOW', 'MEDIUM', 'HIGH'].map((r) => (
+                            <option key={r} value={r}>{r}</option>
+                        ))}
+                    </select>
+
+                    {/* Criticality */}
+                    <select
+                        value={criticalityFilter}
+                        onChange={(e) => setCriticalityFilter(e.target.value)}
+                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="">{t('criticality')} — {tc('all')}</option>
+                        {['LOW', 'MEDIUM', 'HIGH'].map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                        ))}
+                    </select>
+
+                    {/* Department */}
+                    <select
+                        value={departmentFilter}
+                        onChange={(e) => setDepartmentFilter(e.target.value)}
+                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="">{t('department')} — {tc('all')}</option>
+                        {departments.map((d) => (
+                            <option key={d.id} value={d.id}>{d.name}</option>
+                        ))}
+                    </select>
+
+                    {/* Tags */}
+                    <select
+                        value={tagFilter}
+                        onChange={(e) => setTagFilter(e.target.value)}
+                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        <option value="">{t('tags')} — {tc('all')}</option>
+                        {allTags.map((tag) => (
+                            <option key={tag.id} value={tag.id}>
+                                {tag.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             {/* List */}
