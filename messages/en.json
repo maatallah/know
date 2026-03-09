@@ -146,7 +146,11 @@
         "assignedTo": "Assigned to",
         "linkedItem": "Linked Item",
         "assign": "Assign",
-        "closeGap": "Close"
+        "closeGap": "Close",
+        "notFound": "Gap request not found",
+        "actions": "Actions",
+        "markAssigned": "Mark as Assigned",
+        "resolvedMsg": "This gap request has been resolved."
     },
     "departments": {
         "newDepartment": "New Department",
@@ -160,7 +164,13 @@
     "machines": {
         "newMachine": "New Machine",
         "machineName": "Machine name",
-        "serialNumberOptional": "Serial number (optional)",
+        "serialNumberOptional": "Serial Number (Optional)",
+        "notFound": "Machine not found.",
+        "knowledgeHistory": "Knowledge History",
+        "noHistory": "No procedures or guides linked to this machine yet.",
+        "qrCodeTitle": "Machine QR Code",
+        "qrCodeDesc": "Scan this code with any device to instantly access this machine's profile and maintenance history.",
+        "printQr": "Print QR Label",
         "deleteMachine": "Delete this machine?",
         "duplicateMachine": "Duplicate machine"
     },

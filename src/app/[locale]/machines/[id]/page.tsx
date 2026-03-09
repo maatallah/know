@@ -148,7 +148,7 @@ export default function MachineProfilePage() {
     }
 
     if (!machine) {
-        return <div className="py-12 text-center text-destructive">Machine not found.</div>;
+        return <div className="py-12 text-center text-destructive">{t('notFound')}</div>;
     }
 
     const qrUrl = `${domain}/machines/${machine.id}`;
@@ -291,13 +291,13 @@ export default function MachineProfilePage() {
                         <div className="border-b border-border bg-muted/40 px-6 py-4">
                             <h2 className="text-lg font-semibold flex items-center gap-2">
                                 <FileText className="h-5 w-5 text-primary" />
-                                Knowledge History
+                                {t('knowledgeHistory')}
                             </h2>
                         </div>
                         <div className="p-0">
                             {machine.knowledgeItems.length === 0 ? (
                                 <div className="p-8 text-center text-muted-foreground">
-                                    No procedures or guides linked to this machine yet.
+                                    {t('noHistory')}
                                 </div>
                             ) : (
                                 <div className="divide-y divide-border">
@@ -329,19 +329,19 @@ export default function MachineProfilePage() {
                 {/* QR Code Sidebar */}
                 <div className="space-y-6">
                     <div className="rounded-xl border border-border bg-card p-6 shadow-sm flex flex-col items-center text-center">
-                        <h3 className="font-semibold mb-4">Machine QR Code</h3>
+                        <h3 className="font-semibold mb-4">{t('qrCodeTitle')}</h3>
                         <div id="qr-print-zone" className="bg-white p-4 rounded-xl border shadow-inner mb-4">
                             <QRCode value={qrUrl} size={180} className="w-full h-auto" />
                         </div>
                         <p className="text-xs text-muted-foreground mb-4 px-2">
-                            Scan this code with any device to instantly access this machine's profile and maintenance history.
+                            {t('qrCodeDesc')}
                         </p>
                         <button
                             onClick={() => window.print()}
                             className="w-full inline-flex justify-center items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium hover:bg-secondary/80 transition-colors"
                         >
                             <Printer className="h-4 w-4" />
-                            Print QR Label
+                            {t('printQr')}
                         </button>
                     </div>
                 </div>

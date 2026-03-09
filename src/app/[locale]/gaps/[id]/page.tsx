@@ -58,7 +58,7 @@ export default function GapDetailPage() {
     }
 
     if (loading) return <div className="py-12 text-center text-muted-foreground">{tc('loading')}</div>;
-    if (!gap) return <div className="py-12 text-center text-muted-foreground">Not found</div>;
+    if (!gap) return <div className="py-12 text-center text-muted-foreground">{t('notFound')}</div>;
 
     return (
         <div className="space-y-6">
@@ -73,7 +73,7 @@ export default function GapDetailPage() {
                             {gap.status}
                         </span>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">Submitted by {gap.submittedBy.name}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{t('submittedBy')} {gap.submittedBy.name}</p>
                 </div>
             </div>
 
@@ -85,7 +85,7 @@ export default function GapDetailPage() {
             <div className="grid gap-4 sm:grid-cols-2">
                 {gap.assignedTo && (
                     <div className="rounded-lg border border-border bg-card px-4 py-3">
-                        <span className="text-xs font-medium text-muted-foreground">Assigned To</span>
+                        <span className="text-xs font-medium text-muted-foreground">{t('assignedTo')}</span>
                         <p className="text-sm font-medium mt-0.5">{gap.assignedTo.name}</p>
                     </div>
                 )}
@@ -94,7 +94,7 @@ export default function GapDetailPage() {
                         href={`/knowledge/${gap.linkedItem.id}`}
                         className="rounded-lg border border-border bg-card px-4 py-3 hover:border-primary/30 transition-colors"
                     >
-                        <span className="text-xs font-medium text-muted-foreground">Linked Item</span>
+                        <span className="text-xs font-medium text-muted-foreground">{t('linkedItem')}</span>
                         <p className="text-sm font-medium mt-0.5 text-primary">{gap.linkedItem.title}</p>
                     </Link>
                 )}
@@ -102,7 +102,7 @@ export default function GapDetailPage() {
 
             {/* Actions */}
             <div className="rounded-xl border border-border bg-card p-6 space-y-3">
-                <h2 className="text-lg font-semibold">Actions</h2>
+                <h2 className="text-lg font-semibold">{t('actions')}</h2>
                 <div className="flex flex-wrap gap-2">
                     {gap.status === 'OPEN' && (
                         <button
@@ -110,7 +110,7 @@ export default function GapDetailPage() {
                             disabled={actionLoading}
                             className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
                         >
-                            Mark as Assigned
+                            {t('markAssigned')}
                         </button>
                     )}
                     {(gap.status === 'OPEN' || gap.status === 'ASSIGNED') && (
@@ -119,11 +119,11 @@ export default function GapDetailPage() {
                             disabled={actionLoading}
                             className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-green-50 hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
-                            Close
+                            {t('closeGap')}
                         </button>
                     )}
                     {gap.status === 'CLOSED' && (
-                        <p className="text-sm text-muted-foreground">This gap request has been resolved.</p>
+                        <p className="text-sm text-muted-foreground">{t('resolvedMsg')}</p>
                     )}
                 </div>
             </div>

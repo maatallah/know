@@ -146,7 +146,11 @@
         "assignedTo": "مُعيّن إلى",
         "linkedItem": "العنصر المرتبط",
         "assign": "تعيين",
-        "closeGap": "إغلاق"
+        "closeGap": "إغلاق",
+        "notFound": "طلب الفجوة غير موجود",
+        "actions": "إجراءات",
+        "markAssigned": "تحديد كمُعيّن",
+        "resolvedMsg": "تم حل طلب الفجوة هذا."
     },
     "departments": {
         "newDepartment": "قسم جديد",
@@ -161,6 +165,12 @@
         "newMachine": "آلة جديدة",
         "machineName": "اسم الآلة",
         "serialNumberOptional": "الرقم التسلسلي (اختياري)",
+        "notFound": "الآلة غير موجودة.",
+        "knowledgeHistory": "سجل المعرفة",
+        "noHistory": "لا توجد إجراءات أو أدلة مرتبطة بهذه الآلة بعد.",
+        "qrCodeTitle": "رمز الاستجابة السريعة للآلة",
+        "qrCodeDesc": "امسح هذا الرمز بأي جهاز للوصول الفوري إلى ملف هذه الآلة وسجل الصيانة الخاص بها.",
+        "printQr": "طباعة ملصق رمز الاستجابة السريعة",
         "deleteMachine": "هل تريد حذف هذه الآلة؟",
         "duplicateMachine": "تكرار الآلة"
     },

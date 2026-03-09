@@ -146,7 +146,11 @@
         "assignedTo": "Assigné à",
         "linkedItem": "Article lié",
         "assign": "Assigner",
-        "closeGap": "Fermer"
+        "closeGap": "Fermer",
+        "notFound": "Demande de lacune introuvable",
+        "actions": "Actions",
+        "markAssigned": "Marquer comme assigné",
+        "resolvedMsg": "Cette demande de lacune a été résolue."
     },
     "departments": {
         "newDepartment": "Nouveau département",
@@ -160,7 +164,13 @@
     "machines": {
         "newMachine": "Nouvelle machine",
         "machineName": "Nom de la machine",
-        "serialNumberOptional": "Numéro de série (facultatif)",
+        "serialNumberOptional": "Numéro de série (Optionnel)",
+        "notFound": "Machine introuvable.",
+        "knowledgeHistory": "Historique des connaissances",
+        "noHistory": "Aucune procédure ou guide lié à cette machine pour le moment.",
+        "qrCodeTitle": "Code QR de la machine",
+        "qrCodeDesc": "Scannez ce code avec n'importe quel appareil pour accéder instantanément au profil et à l'historique de maintenance de cette machine.",
+        "printQr": "Imprimer l'étiquette QR",
         "deleteMachine": "Supprimer cette machine ?",
         "duplicateMachine": "Dupliquer la machine"
     },

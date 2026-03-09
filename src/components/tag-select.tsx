@@ -104,7 +104,7 @@ export function TagSelect({ selectedTags, onChange }: TagSelectProps) {
                             className="text-muted-foreground hover:text-foreground"
                         >
                             <X className="h-3 w-3" />
-                            <span className="sr-only">Remove {tag.name}</span>
+                            <span className="sr-only">{tc('remove')} {tag.name}</span>
                         </button>
                     </span>
                 ))}
@@ -148,7 +148,7 @@ export function TagSelect({ selectedTags, onChange }: TagSelectProps) {
                             className="flex w-full items-center gap-2 border-t border-border px-3 py-1.5 text-start text-sm text-primary hover:bg-accent disabled:opacity-50"
                         >
                             {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <span className="text-xl leading-none">+</span>}
-                            Create "{inputValue.trim()}"
+                            {tc('create')} "{inputValue.trim()}"
                         </button>
                     )}
                 </div>
