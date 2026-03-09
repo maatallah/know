@@ -62,10 +62,10 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const linked = await prisma.knowledgeItem.count({ where: { machineId: id } });
+    const linked = await prisma.knowledgeItem.count({ where: { machineId: id, isDeleted: false } });
     if (linked > 0) {
         return NextResponse.json(
-            { error: 'Cannot delete machine with linked knowledge items' },
+            { error: `Cannot delete: ${linked} knowledge item(s) are still linked to this machine` },
             { status: 400 }
         );
     }
