@@ -124,6 +124,11 @@
             "LOW": "منخفض",
             "MEDIUM": "متوسط",
             "HIGH": "مرتفع"
+        },
+        "criticalityLevels": {
+            "LOW": "منخفضة",
+            "MEDIUM": "متوسطة",
+            "HIGH": "مرتفعة"
         }
     },
     "gaps": {

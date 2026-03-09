@@ -124,6 +124,11 @@
             "LOW": "Low",
             "MEDIUM": "Medium",
             "HIGH": "High"
+        },
+        "criticalityLevels": {
+            "LOW": "Low",
+            "MEDIUM": "Medium",
+            "HIGH": "High"
         }
     },
     "gaps": {

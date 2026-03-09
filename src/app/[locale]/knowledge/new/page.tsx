@@ -151,7 +151,7 @@ export default function NewKnowledgePage() {
                             className="input-field"
                         >
                             {CRITICALITY_LEVELS.map((c) => (
-                                <option key={c} value={c}>{t(`riskLevels.${c}`)}</option>
+                                <option key={c} value={c}>{t(`criticalityLevels.${c}`)}</option>
                             ))}
                         </select>
                     </FormField>

@@ -178,7 +178,7 @@ export default function KnowledgeListPage() {
                     >
                         <option value="">{t('riskLevel')} — {tc('all')}</option>
                         {['LOW', 'MEDIUM', 'HIGH'].map((r) => (
-                            <option key={r} value={r}>{r}</option>
+                            <option key={r} value={r}>{t(`riskLevels.${r}`)}</option>
                         ))}
                     </select>
 
@@ -190,7 +190,7 @@ export default function KnowledgeListPage() {
                     >
                         <option value="">{t('criticality')} — {tc('all')}</option>
                         {['LOW', 'MEDIUM', 'HIGH'].map((c) => (
-                            <option key={c} value={c}>{c}</option>
+                            <option key={c} value={c}>{t(`criticalityLevels.${c}`)}</option>
                         ))}
                     </select>
 

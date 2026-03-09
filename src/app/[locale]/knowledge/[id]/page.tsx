@@ -153,7 +153,7 @@ export default function KnowledgeDetailPage() {
             {/* Metadata Grid */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <MetaCard icon={<Shield className="h-4 w-4" />} label={t('riskLevel')} value={t(`riskLevels.${item.riskLevel}`)} />
-                <MetaCard icon={<AlertTriangle className="h-4 w-4" />} label={t('criticality')} value={item.criticalityLevel} />
+                <MetaCard icon={<AlertTriangle className="h-4 w-4" />} label={t('criticality')} value={t(`criticalityLevels.${item.criticalityLevel}`)} />
                 <MetaCard icon={<Clock className="h-4 w-4" />} label={t('type')} value={t(`types.${item.type}`)} />
                 <MetaCard icon={<Eye className="h-4 w-4" />} label={t('viewCount')} value={String(item.viewCount)} />
             </div>
