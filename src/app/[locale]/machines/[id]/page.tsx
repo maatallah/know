@@ -133,7 +133,9 @@ export default function MachineProfilePage() {
         });
         if (res.ok) {
             const created = await res.json();
-            router.push(`/machines/${created.id}`);
+            // Use window.location for reliable navigation with locale
+            const locale = window.location.pathname.split('/')[1]; // e.g. "fr", "en", "ar"
+            window.location.href = `/${locale}/machines/${created.id}`;
         } else {
             const err = await res.json();
             alert(err.error || 'Failed to duplicate');
