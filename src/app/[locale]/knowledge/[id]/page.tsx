@@ -134,9 +134,9 @@ export default function KnowledgeDetailPage() {
         <div className="space-y-6">
             {/* Back + Title */}
             <div className="flex items-start gap-4">
-                <Link href="/knowledge" className="mt-1 rounded-lg p-2 hover:bg-accent transition-colors">
+                <button onClick={() => window.history.back()} className="mt-1 rounded-lg p-2 hover:bg-accent transition-colors">
                     <ArrowLeft className="h-5 w-5 rtl:-scale-x-100" />
-                </Link>
+                </button>
                 <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                         <h1 className="text-2xl font-bold">{item.title}</h1>
