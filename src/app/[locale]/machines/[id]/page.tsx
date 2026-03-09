@@ -113,7 +113,8 @@ export default function MachineProfilePage() {
         if (!confirm(t('deleteMachine'))) return;
         const res = await fetch(`/api/machines/${id}`, { method: 'DELETE' });
         if (res.ok) {
-            router.back();
+            const locale = window.location.pathname.split('/')[1];
+            window.location.href = `/${locale}/machines`;
         } else {
             const err = await res.json();
             alert(err.error);
@@ -157,7 +158,7 @@ export default function MachineProfilePage() {
             {/* Top bar: Back + Actions */}
             <div className="flex items-center justify-between">
                 <button
-                    onClick={() => router.back()}
+                    onClick={() => window.history.back()}
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                     <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />
