@@ -129,7 +129,11 @@
             "LOW": "Faible",
             "MEDIUM": "Moyenne",
             "HIGH": "Élevée"
-        }
+        },
+        "duplicate": "Dupliquer",
+        "createNewVersion": "Nouvelle Version",
+        "confirmDuplicate": "Dupliquer cette procédure pour créer un nouvel élément dans la base de connaissances ?",
+        "confirmNewVersion": "Créer une nouvelle version brouillon ? La version actuelle restera approuvée pendant que vous travaillez."
     },
     "gaps": {
         "title": "Lacunes de connaissances",

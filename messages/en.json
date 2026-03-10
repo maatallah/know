@@ -129,7 +129,11 @@
             "LOW": "Low",
             "MEDIUM": "Medium",
             "HIGH": "High"
-        }
+        },
+        "duplicate": "Duplicate",
+        "createNewVersion": "New Version",
+        "confirmDuplicate": "Duplicate this procedure to create a new Knowledge Base item?",
+        "confirmNewVersion": "Create a new draft version? The current version will remain approved while you work."
     },
     "gaps": {
         "title": "Knowledge Gaps",

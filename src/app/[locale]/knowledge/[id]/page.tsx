@@ -4,8 +4,9 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Eye, Clock, Shield, AlertTriangle, Paperclip, Download, Trash2 } from 'lucide-react';
+import { ArrowLeft, Eye, Clock, Shield, AlertTriangle, Paperclip, Download, Trash2, Copy, FilePlus } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { usePermissions } from '@/lib/usePermissions';
 import ReactMarkdown from 'react-markdown';
 
 interface KnowledgeDetail {
@@ -56,6 +57,7 @@ const statusColors: Record<string, string> = {
 export default function KnowledgeDetailPage() {
     const t = useTranslations('knowledge');
     const tc = useTranslations('common');
+    const { can } = usePermissions();
     const params = useParams();
     const router = useRouter();
     const [item, setItem] = useState<KnowledgeDetail | null>(null);
@@ -125,6 +127,33 @@ export default function KnowledgeDetailPage() {
         setActionLoading(false);
     }
 
+    async function handleDuplicate() {
+        if (!confirm(t('confirmDuplicate') || 'Duplicate this procedure?')) return;
+        setActionLoading(true);
+        const res = await fetch(`/api/knowledge/${id}/duplicate`, { method: 'POST' });
+        if (res.ok) {
+            const newItem = await res.json();
+            router.push(`/knowledge/${newItem.id}`);
+        } else {
+            alert('Failed to duplicate');
+            setActionLoading(false);
+        }
+    }
+
+    async function handleNewVersion() {
+        if (!confirm(t('confirmNewVersion') || 'Create a new draft version?')) return;
+        setActionLoading(true);
+        const res = await fetch(`/api/knowledge/${id}/version`, { method: 'POST' });
+        if (res.ok) {
+            const fresh = await fetch(`/api/knowledge/${id}`);
+            setItem(await fresh.json());
+        } else {
+            const data = await res.json();
+            alert(data.error || 'Failed to create new version');
+        }
+        setActionLoading(false);
+    }
+
     if (loading) return <div className="py-12 text-center text-muted-foreground">{tc('loading')}</div>;
     if (!item) return <div className="py-12 text-center text-muted-foreground">Not found</div>;
 
@@ -137,16 +166,43 @@ export default function KnowledgeDetailPage() {
                 <button onClick={() => window.history.back()} className="mt-1 rounded-lg p-2 hover:bg-accent transition-colors">
                     <ArrowLeft className="h-5 w-5 rtl:-scale-x-100" />
                 </button>
-                <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <h1 className="text-2xl font-bold">{item.title}</h1>
-                        <span className={cn('rounded-full px-3 py-1 text-xs font-medium', statusColors[item.status])}>
-                            {t(`statuses.${item.status}`)}
-                        </span>
+                <div className="flex-1 flex items-start justify-between gap-4">
+                    <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-2xl font-bold">{item.title}</h1>
+                            <span className={cn('rounded-full px-3 py-1 text-xs font-medium', statusColors[item.status])}>
+                                {t(`statuses.${item.status}`)}
+                            </span>
+                        </div>
+                        {item.shortDescription && (
+                            <p className="mt-1 text-muted-foreground">{item.shortDescription}</p>
+                        )}
                     </div>
-                    {item.shortDescription && (
-                        <p className="mt-1 text-muted-foreground">{item.shortDescription}</p>
-                    )}
+
+                    <div className="flex items-center gap-2 shrink-0">
+                        {can('knowledge.create') && (
+                            <button
+                                onClick={handleDuplicate}
+                                disabled={actionLoading}
+                                className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium hover:bg-accent transition-colors disabled:opacity-50"
+                                title={t('duplicate')}
+                            >
+                                <Copy className="h-4 w-4" />
+                                <span className="hidden sm:inline">{t('duplicate')}</span>
+                            </button>
+                        )}
+                        {(item.status === 'APPROVED' || item.status === 'ARCHIVED') && can('knowledge.create') && (
+                            <button
+                                onClick={handleNewVersion}
+                                disabled={actionLoading}
+                                className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
+                                title={t('createNewVersion')}
+                            >
+                                <FilePlus className="h-4 w-4" />
+                                <span className="hidden sm:inline">{t('createNewVersion')}</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
