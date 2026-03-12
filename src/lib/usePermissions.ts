@@ -16,6 +16,9 @@ interface UserPermissions {
 
 let cachedPermissions: UserPermissions | null = null;
 
+export function clearPermissionsCache() {
+    cachedPermissions = null;
+}
 
 export function usePermissions() {
     const [data, setData] = useState<UserPermissions | null>(cachedPermissions);

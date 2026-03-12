@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { signOut } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { usePermissions } from '@/lib/usePermissions';
+import { usePermissions, clearPermissionsCache } from '@/lib/usePermissions';
 import { LogOut, User as UserIcon, Settings } from 'lucide-react';
 
 export function UserMenu() {
@@ -78,7 +78,11 @@ export function UserMenu() {
 
                     <div className="border-t border-border/50 p-1">
                         <button
-                            onClick={() => signOut({ callbackUrl: '/login' })}
+                            onClick={async () => {
+                                clearPermissionsCache();
+                                await signOut({ callbackUrl: '/login' });
+                                window.location.href = '/login'; // Force hard reload to guarantee cache wipe
+                            }}
                             className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-destructive hover:bg-destructive/10 transition-colors"
                         >
                             <LogOut className="h-4 w-4" />
