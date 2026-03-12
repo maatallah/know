@@ -4,6 +4,7 @@ import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { Languages } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { usePermissions } from '@/lib/usePermissions';
 import { cn } from '@/lib/utils';
 
 const localeLabels: Record<string, string> = {
@@ -16,6 +17,7 @@ export function LanguageSwitcher() {
     const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
+    const { user } = usePermissions();
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -29,7 +31,15 @@ export function LanguageSwitcher() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    function switchLocale(newLocale: string) {
+    async function switchLocale(newLocale: string) {
+        if (user?.authenticated && newLocale !== locale) {
+            fetch('/api/me/update', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ locale: newLocale })
+            }).catch(console.error);
+        }
+
         router.replace(pathname, { locale: newLocale as 'ar' | 'fr' | 'en' });
         setOpen(false);
     }

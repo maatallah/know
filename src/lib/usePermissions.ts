@@ -8,10 +8,14 @@ interface UserPermissions {
     name: string;
     email: string;
     role: string;
+    department?: string;
+    theme?: string;
+    locale?: string;
     permissions: Record<string, boolean>;
 }
 
 let cachedPermissions: UserPermissions | null = null;
+
 
 export function usePermissions() {
     const [data, setData] = useState<UserPermissions | null>(cachedPermissions);

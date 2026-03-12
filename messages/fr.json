@@ -1,5 +1,7 @@
 {
     "common": {
+        "profile": "Mon Profil",
+        "logout": "Déconnexion",
         "appName": "Know",
         "search": "Rechercher",
         "save": "Enregistrer",

@@ -1,5 +1,7 @@
 {
     "common": {
+        "profile": "My Profile",
+        "logout": "Log out",
         "appName": "Know",
         "search": "Search",
         "save": "Save",

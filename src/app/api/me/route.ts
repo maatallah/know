@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { hasPermission, Permission } from '@/lib/rbac';
+import { prisma } from '@/lib/prisma';
 
 // GET /api/me — Return current user info and permissions
 export async function GET() {
@@ -27,12 +28,20 @@ export async function GET() {
         permissions[perm] = hasPermission(user.role, perm);
     }
 
+    const dbUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { theme: true, locale: true, department: { select: { name: true } } }
+    });
+
     return NextResponse.json({
         authenticated: true,
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+        department: dbUser?.department?.name,
+        theme: dbUser?.theme || 'system',
+        locale: dbUser?.locale || 'en',
         permissions,
     });
 }

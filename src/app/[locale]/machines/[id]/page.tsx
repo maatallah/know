@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
-import { ArrowLeft, Settings2, Calendar, FileText, Printer, Pencil, Trash2, Copy, Check, X } from 'lucide-react';
+import { ArrowLeft, Settings2, Calendar, FileText, Printer, Pencil, Trash2, Copy, Check, X, FilePlus } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 import { usePermissions } from '@/lib/usePermissions';
 
@@ -51,6 +51,7 @@ export default function MachineProfilePage() {
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [kbActionLoading, setKbActionLoading] = useState<string | null>(null);
     const [form, setForm] = useState({ name: '', serialNumber: '', departmentId: '' });
 
     const [domain, setDomain] = useState('');
@@ -107,6 +108,33 @@ export default function MachineProfilePage() {
             setEditing(false);
         }
         setSaving(false);
+    }
+
+    async function handleDuplicateKB(itemId: string) {
+        if (!confirm(tk('confirmDuplicate') || 'Duplicate this procedure?')) return;
+        setKbActionLoading(itemId);
+        const res = await fetch(`/api/knowledge/${itemId}/duplicate`, { method: 'POST' });
+        if (res.ok) {
+            const newItem = await res.json();
+            router.push(`/knowledge/${newItem.id}`);
+        } else {
+            alert('Failed to duplicate');
+            setKbActionLoading(null);
+        }
+    }
+
+    async function handleNewVersionKB(itemId: string) {
+        if (!confirm(tk('confirmNewVersion') || 'Create a new draft version?')) return;
+        setKbActionLoading(itemId);
+        const res = await fetch(`/api/knowledge/${itemId}/version`, { method: 'POST' });
+        if (res.ok) {
+            const fresh = await fetch(`/api/machines/${id}`);
+            setMachine(await fresh.json());
+        } else {
+            const data = await res.json();
+            alert(data.error || 'Failed to create new version');
+        }
+        setKbActionLoading(null);
     }
 
     async function handleDelete() {
@@ -302,23 +330,46 @@ export default function MachineProfilePage() {
                             ) : (
                                 <div className="divide-y divide-border">
                                     {machine.knowledgeItems.map(item => (
-                                        <Link
+                                        <div
                                             key={item.id}
-                                            href={`/knowledge/${item.id}`}
                                             className="flex items-center justify-between p-4 hover:bg-accent transition-colors"
                                         >
-                                            <div>
+                                            <Link href={`/knowledge/${item.id}`} className="flex-1 block">
                                                 <h3 className="font-medium text-primary hover:underline">{item.title}</h3>
                                                 <div className="text-xs text-muted-foreground mt-1 space-x-2">
                                                     <span>{tk(`types.${item.type}`)}</span>
                                                     <span>•</span>
                                                     <span>{new Date(item.updatedAt).toLocaleDateString()}</span>
                                                 </div>
+                                            </Link>
+                                            <div className="flex items-center gap-3">
+                                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[item.status]}`}>
+                                                    {tk(`statuses.${item.status}`)}
+                                                </span>
+                                                {can('knowledge.create') && (
+                                                    <div className="flex gap-1">
+                                                        <button
+                                                            onClick={() => handleDuplicateKB(item.id)}
+                                                            disabled={kbActionLoading === item.id}
+                                                            className="p-1.5 rounded hover:bg-border/50 transition-colors disabled:opacity-50"
+                                                            title={tk('duplicate')}
+                                                        >
+                                                            <Copy className="h-4 w-4 text-muted-foreground" />
+                                                        </button>
+                                                        {(item.status === 'APPROVED' || item.status === 'ARCHIVED') && (
+                                                            <button
+                                                                onClick={() => handleNewVersionKB(item.id)}
+                                                                disabled={kbActionLoading === item.id}
+                                                                className="p-1.5 rounded hover:bg-border/50 transition-colors disabled:opacity-50"
+                                                                title={tk('createNewVersion')}
+                                                            >
+                                                                <FilePlus className="h-4 w-4 text-primary" />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
-                                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[item.status]}`}>
-                                                {tk(`statuses.${item.status}`)}
-                                            </span>
-                                        </Link>
+                                        </div>
                                     ))}
                                 </div>
                             )}

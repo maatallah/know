@@ -1,5 +1,7 @@
 {
     "common": {
+        "profile": "حسابي شخصي",
+        "logout": "تسجيل خروج",
         "appName": "Know",
         "search": "بحث",
         "save": "حفظ",

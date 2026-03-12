@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Menu } from 'lucide-react';
 import { LanguageSwitcher } from './language-switcher';
 import { ThemeToggle } from './theme-toggle';
+import { UserMenu } from './user-menu';
 
 interface HeaderProps {
     onMenuClick: () => void;
@@ -25,6 +26,9 @@ export function Header({ onMenuClick }: HeaderProps) {
             <div className="flex items-center gap-2">
                 <LanguageSwitcher />
                 <ThemeToggle />
+                <div className="ml-2 pl-2 border-l border-border h-6 flex items-center">
+                    <UserMenu />
+                </div>
             </div>
         </header>
     );

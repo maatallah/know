@@ -299,10 +299,12 @@ export default function KnowledgeDetailPage() {
                     <h2 className="text-lg font-semibold flex items-center gap-2">
                         <Paperclip className="h-4 w-4" /> {tc('attachments')} ({attachments.length})
                     </h2>
-                    <label className="cursor-pointer rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80 transition-colors">
-                        {uploading ? '...' : tc('uploadFile')}
-                        <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
-                    </label>
+                    {item.status !== 'ARCHIVED' && (
+                        <label className="cursor-pointer rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80 transition-colors">
+                            {uploading ? '...' : tc('uploadFile')}
+                            <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
+                        </label>
+                    )}
                 </div>
                 {attachments.length === 0 ? (
                     <p className="text-sm text-muted-foreground">No attachments yet.</p>
@@ -323,9 +325,11 @@ export default function KnowledgeDetailPage() {
                                     <a href={att.fileUrl} target="_blank" className="p-1.5 rounded hover:bg-accent transition-colors">
                                         <Download className="h-4 w-4" />
                                     </a>
-                                    <button onClick={() => handleDeleteAttachment(att.fileUrl)} className="p-1.5 rounded hover:bg-destructive/10 text-destructive transition-colors">
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
+                                    {item.status !== 'ARCHIVED' && (
+                                        <button onClick={() => handleDeleteAttachment(att.fileUrl)} className="p-1.5 rounded hover:bg-destructive/10 text-destructive transition-colors">
+                                            <Trash2 className="h-4 w-4" />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}
