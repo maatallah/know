@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
     const isPublicStatic = pathname.match(/\.(png|jpg|jpeg|svg|webp|ico|css|js)$/) || pathname.startsWith('/_next') || pathname === '/favicon.ico';
-    const isPublicApi = pathname.startsWith('/api/auth/');
+    const isPublicApi = pathname.match(/(\/ar|\/fr|\/en)?\/api\/auth\//);
     const isPublicUI = pathname.match(/^\/(ar|fr|en)\/(login|register)/) || pathname === '/login' || pathname === '/register';
 
     if (!isPublicStatic && !isPublicApi && !isPublicUI) {
