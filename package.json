@@ -11,11 +11,14 @@
   "dependencies": {
     "@prisma/client": "6.4.1",
     "@tailwindcss/typography": "^0.5.19",
+    "@yudiel/react-qr-scanner": "^2.5.1",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.0",
     "lucide-react": "^0.576.0",
-    "next": "16.1.6",
+    "next": "15.1.7",
     "next-auth": "^4.24.13",
     "next-intl": "^4.8.3",
     "next-themes": "^0.4.6",
@@ -25,6 +28,7 @@
     "react-markdown": "^10.1.0",
     "react-qr-code": "^2.0.18",
     "tailwind-merge": "^3.5.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -34,7 +38,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "15.1.7",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"

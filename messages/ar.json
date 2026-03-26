@@ -39,7 +39,32 @@
         "backToDashboard": "العودة إلى لوحة القيادة",
         "downloads": "تحميلات",
         "uploadFile": "رفع ملف",
-        "attachments": "المرفقات"
+        "attachments": "المرفقات",
+        "viewAll": "عرض الكل",
+        "results": "نتائج",
+        "somethingWentWrong": "حدث خطأ ما",
+        "unexpectedError": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+        "tryAgain": "أعد المحاولة",
+        "capture": "التقاط",
+        "upload": "رفع",
+        "uploading": "جاري الرفع...",
+        "exportPdf": "تصدير PDF",
+        "exportXlsx": "تصدير XLSX",
+        "systemId": "معرف النظام",
+        "error": "خطأ",
+        "preview": "معاينة",
+        "recordVideo": "تسجيل فيديو",
+        "takePhoto": "التقاط صورة",
+        "recording": "جاري التسجيل...",
+        "photo": "صورة",
+        "video": "فيديو",
+        "retake": "إعادة الالتقاط",
+        "useMedia": "استخدام الوسائط",
+        "cameraError": "تعذر الوصول إلى الكاميرا/الميكروفون.",
+        "uploadFailed": "فشل الرفع",
+        "namePlaceholder": "الاسم الكامل",
+        "emailPlaceholder": "الاسم@الشركة.com",
+        "passwordPlaceholder": "••••••••"
     },
     "nav": {
         "dashboard": "لوحة القيادة",
@@ -49,7 +74,8 @@
         "gaps": "فجوات المعرفة",
         "users": "المستخدمون",
         "audit": "سجل المراجعة",
-        "settings": "الإعدادات"
+        "settings": "الإعدادات",
+        "scanQr": "مسح رمز الآلة"
     },
     "auth": {
         "login": "تسجيل الدخول",
@@ -59,7 +85,9 @@
         "loginTitle": "سجّل الدخول إلى حسابك",
         "loginSubtitle": "الوصول إلى منصة المعرفة التشغيلية",
         "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
-        "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى."
+        "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى.",
+        "emailPlaceholder": "admin@example.com",
+        "passwordPlaceholder": "••••••••"
     },
     "dashboard": {
         "title": "لوحة القيادة",
@@ -132,13 +160,30 @@
             "MEDIUM": "متوسطة",
             "HIGH": "مرتفعة"
         },
-        "duplicate": "تكرار",
+        "duplicate": "استنساخ",
         "createNewVersion": "إصدار جديد",
-        "confirmDuplicate": "هل تريد تكرار هذا الإجراء لإنشاء عنصر جديد في قاعدة المعرفة؟",
-        "confirmNewVersion": "إنشاء مسودة إصدار جديد؟ سيظل الإصدار الحالي معتمدًا أثناء عملك."
+        "confirmDuplicate": "هل تريد استنساخ هذا الإجراء لإنشاء عنصر جديد في قاعدة المعرفة؟",
+        "confirmNewVersion": "إنشاء مسودة إصدار جديد؟ سيظل الإصدار الحالي معتمدًا أثناء عملك.",
+        "confirmArchive": "هل أنت متأكد أنك تريد أرشفة هذا الإجراء؟ سيصبح للقراءة فقط.",
+        "confirmDeleteAttachment": "هل أنت متأكد أنك تريد حذف هذا المرفق نهائياً؟",
+        "item": "عنصر",
+        "items": "عناصر",
+        "requests": "طلبات",
+        "approvalCommentRequired": "تعليق الموافقة إلزامي",
+        "approvalCommentPlaceholder": "اكتب تعليقات الموافقة هنا (إلزامي)...",
+        "failedToDuplicate": "فشل الاستنساخ",
+        "failedToCreateVersion": "فشل إنشاء إصدار جديد",
+        "archivedNotice": "تم أرشفة هذا العنصر وهو الآن للقراءة فقط.",
+        "noMediaAttached": "لا توجد وسائط مرفقة بعد"
     },
     "gaps": {
         "title": "فجوات المعرفة",
+        "subtitle": "تتبع وإدارة فجوات المعرفة المحددة",
+        "rejectReasonTitle": "سبب الإغلاق",
+        "closeGapModalTitle": "إغلاق فجوة المعرفة",
+        "closeGapModalDesc": "نظراً لعدم وجود مستند مرتبط بهذه الفجوة، يرجى تقديم سبب لإغلاقها.",
+        "rejectReasonPlaceholder": "مثال: طلب متكرر، إجراء غير صالح...",
+        "confirmClose": "إغلاق الفجوة",
         "submitNew": "تقديم طلب فجوة",
         "gapTitle": "العنوان",
         "gapTitlePlaceholder": "إجراء مفقود أو تحسين...",
@@ -165,6 +210,7 @@
         "users": "مستخدمون",
         "machines": "آلات",
         "items": "عناصر",
+        "activeUnits": "{count} وحدات تنظيمية نشطة",
         "deleteDepartment": "هل تريد حذف هذا القسم؟"
     },
     "machines": {
@@ -178,7 +224,16 @@
         "qrCodeDesc": "امسح هذا الرمز بأي جهاز للوصول الفوري إلى ملف هذه الآلة وسجل الصيانة الخاص بها.",
         "printQr": "طباعة ملصق رمز الاستجابة السريعة",
         "deleteMachine": "هل تريد حذف هذه الآلة؟",
-        "duplicateMachine": "تكرار الآلة"
+        "duplicateMachine": "استنساخ الآلة",
+        "invalidQr": "رمز الاستجابة السريعة للآلة غير صالح",
+        "invalidUrl": "رمز الاستجابة السريعة الممسوح ليس عنوان URL صالحًا",
+        "scanDescription": "قم بتوجيه الكاميرا إلى ملصق QR الخاص بالآلة للوصول الفوري إلى ملفها وسجلها.",
+        "devicesRegistered": "أجهزة مسجلة حاليًا",
+        "machineNamePlaceholder": "مثال: قالب حقن A1",
+        "serialNumberPlaceholder": "SN-XXXX-XXXX",
+        "noSerialNumber": "بدون رقم تسلسلي",
+        "failedToDuplicate": "فشل الاستنساخ",
+        "failedToCreateVersion": "فشل إنشاء إصدار جديد"
     },
     "users": {
         "newUser": "مستخدم جديد",
@@ -190,17 +245,113 @@
             "EXPERT": "خبير",
             "REVIEWER": "مراجع",
             "STANDARD_USER": "مستخدم عادي"
-        }
+        },
+        "manageAccessSubtitle": "إدارة الوصول إلى المنصة وتعيين أدوار المستخدمين"
     },
     "audit": {
+        "title": "سجل المراجعة",
+        "subtitle": "سجل التتبع وعمليات الأمان",
         "time": "الوقت",
         "action": "الإجراء",
         "entity": "الكيان",
-        "user": "المستخدم"
+        "user": "المستخدم",
+        "allActions": "جميع الإجراءات",
+        "timestamp": "التاريخ",
+        "involvedPerson": "الشخص المعني",
+        "operation": "العملية",
+        "targetResource": "المورد المستهدف",
+        "impactDetails": "تفاصيل التأثير",
+        "noActivitiesTimeframe": "لا توجد أنشطة مسجلة في هذه الفترة الزمنية.",
+        "cleanupLogs": "تنظيف سجلات التدقيق",
+        "cleanupConfirm": "هل أنت متأكد من رغبتك في حذف سجلات التدقيق القديمة نهائياً بناءً على معايير النظام؟",
+        "cleanSuccess": "تم تنظيف سجلات التدقيق بنجاح!",
+        "systemAuto": "النظام التلقائي",
+        "noExtraData": "لا توجد بيانات إضافية",
+        "actionLabels": {
+            "CREATE": "إنشاء",
+            "UPDATE": "تحديث",
+            "DELETE": "حذف",
+            "APPROVAL": "موافقة",
+            "SUBMIT_REVIEW": "تقديم للمراجعة",
+            "ARCHIVE": "أرشفة",
+            "LOGIN": "تسجيل دخول"
+        },
+        "entityLabels": {
+            "Knowledge": "معرفة",
+            "User": "مستخدم",
+            "Machine": "آلة",
+            "Department": "قسم",
+            "KnowledgeGapRequest": "طلب فجوة",
+            "AuditLog": "سجل المراجعة",
+            "Comment": "تعليق",
+            "Attachment": "مرفق",
+            "KNOWLEDGE": "معرفة",
+            "USER": "مستخدم",
+            "MACHINE": "آلة",
+            "DEPARTMENT": "قسم",
+            "KNOWLEDGE_GAP_REQUEST": "طلب فجوة",
+            "AUDIT_LOG": "سجل المراجعة",
+            "COMMENT": "تعليق",
+            "ATTACHMENT": "مرفق"
+        },
+        "detailsLabels": {
+            "status": "الحالة",
+            "reason": "السبب",
+            "rejectionReason": "سبب الرفض",
+            "comment": "التعليق",
+            "name": "الاسم",
+            "email": "البريد الإلكتروني",
+            "role": "الدور",
+            "departmentId": "معرف القسم",
+            "note": "ملاحظة"
+        },
+        "detailsValues": {
+            "CLOSED": "مغلق",
+            "OPEN": "مفتوح",
+            "PENDING": "قيد الانتظار",
+            "APPROVED": "مقبول",
+            "REJECTED": "مرفوض"
+        }
     },
     "theme": {
         "light": "فاتح",
         "dark": "داكن",
         "system": "النظام"
+    },
+    "settings": {
+        "title": "إعدادات الملف الشخصي",
+        "systemAccount": "حساب النظام",
+        "preferences": "التفضيلات",
+        "noteAdmin": "ملاحظة: يتم التحكم في بريدك الإلكتروني ودورك وقسمك من قبل مسؤولي النظام.",
+        "language": "اللغة",
+        "theme": "المظهر",
+        "languages": {
+            "en": "الإنجليزية (US)",
+            "fr": "الفرنسية (France)",
+            "ar": "العربية (Arabic)"
+        },
+        "themes": {
+            "system": "افتراضي النظام",
+            "light": "الوضع الفاتح",
+            "dark": "الوضع الداكن"
+        },
+        "saving": "جاري الحفظ...",
+        "saved": "تم الحفظ!",
+        "namePlaceholder": "اسمك",
+        "manageProfileSubtitle": "إدارة تفضيلات حسابك ومعلوماتك الشخصية",
+        "failedToUpdateProfile": "فشل تحديث الملف الشخصي",
+        "errorOccurred": "حدث خطأ",
+        "systemSettings": "إعدادات النظام العالمية",
+        "auditKeepLatest": "سجل التدقيق: الاحتفاظ بآخر X سجلات",
+        "auditMaxAgeDays": "سجل التدقيق: حذف السجلات الأقدم من (أيام)",
+        "auditKeepLatestHelp": "حدد الحد الأقصى لأحدث السجلات التي سيتم الاحتفاظ بها في قاعدة البيانات.",
+        "auditMaxAgeHelp": "سيتم حذف السجلات التي يتجاوز عمرها هذا العدد من الأيام أثناء التنظيف.",
+        "globalSettingsDesc": "تؤثر هذه المعلمات على جميع المسؤولين ومهام الصيانة الخلفية."
+    },
+    "notifications": {
+        "reviewRequiredSubject": "مراجعة مطلوبة: {title}",
+        "reviewRequiredMessage": "قام المستخدم {name} بتقديم عنصر معرفة جديد لمراجعتك.\nيرجى مراجعة المسودة واعتمادها داخل المنصة.",
+        "gapAssignedSubject": "تم تعيين فجوة معرفية: {title}",
+        "gapAssignedMessage": "تم تعيينك لتلبية طلب توثيق بخصوص:\n\"{title}\"\nتم تحديث الحالة إلى تم التعيين."
     }
 }

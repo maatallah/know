@@ -47,9 +47,10 @@ export function LanguageSwitcher() {
     return (
         <div ref={ref} className="relative">
             <button
+                title={locale === 'fr' ? 'Changer de langue' : locale === 'ar' ? 'تغيير اللغة' : 'Switch language'}
                 onClick={() => setOpen(!open)}
                 className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent transition-colors"
-                aria-label="Switch language"
+                aria-label={locale === 'fr' ? 'Changer de langue' : locale === 'ar' ? 'تغيير اللغة' : 'Switch language'}
             >
                 <Languages className="h-4 w-4" />
                 <span className="hidden sm:inline">{localeLabels[locale]}</span>

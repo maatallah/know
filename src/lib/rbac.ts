@@ -49,6 +49,10 @@ const PERMISSIONS = {
     // Attachments
     'attachments.upload': 'EXPERT',
     'attachments.delete': 'DEPARTMENT_MANAGER',
+
+    // Audit
+    'audit.view': 'DEPARTMENT_MANAGER',
+    'audit.cleanup': 'SUPER_ADMIN',
 } as const;
 
 export type Permission = keyof typeof PERMISSIONS;

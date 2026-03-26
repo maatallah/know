@@ -1,12 +1,15 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
-import { ArrowLeft, Settings2, Calendar, FileText, Printer, Pencil, Trash2, Copy, Check, X, FilePlus } from 'lucide-react';
+import { ArrowLeft, Settings2, Calendar, FileText, Printer, Pencil, Trash2, Copy, Check, X, FilePlus, FileSpreadsheet } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 import { usePermissions } from '@/lib/usePermissions';
+import { ConfirmModal } from '@/components/confirm-modal';
+import * as XLSX from 'xlsx';
 
 interface KnowledgeItem {
     id: string;
@@ -53,6 +56,11 @@ export default function MachineProfilePage() {
     const [saving, setSaving] = useState(false);
     const [kbActionLoading, setKbActionLoading] = useState<string | null>(null);
     const [form, setForm] = useState({ name: '', serialNumber: '', departmentId: '' });
+    const [confirmConfig, setConfirmConfig] = useState<{ isOpen: boolean; title?: string; message: string; onConfirm: () => void; variant?: 'danger' | 'warning' | 'default'; confirmText?: string }>({
+        isOpen: false,
+        message: '',
+        onConfirm: () => { }
+    });
 
     const [domain, setDomain] = useState('');
 
@@ -111,42 +119,66 @@ export default function MachineProfilePage() {
     }
 
     async function handleDuplicateKB(itemId: string) {
-        if (!confirm(tk('confirmDuplicate') || 'Duplicate this procedure?')) return;
-        setKbActionLoading(itemId);
-        const res = await fetch(`/api/knowledge/${itemId}/duplicate`, { method: 'POST' });
-        if (res.ok) {
-            const newItem = await res.json();
-            router.push(`/knowledge/${newItem.id}`);
-        } else {
-            alert('Failed to duplicate');
-            setKbActionLoading(null);
-        }
+        setConfirmConfig({
+            isOpen: true,
+            title: tc('confirm'),
+            message: tk('confirmDuplicate') || 'Duplicate this procedure?',
+            confirmText: tk('duplicate'),
+            variant: 'default',
+            onConfirm: async () => {
+                setKbActionLoading(itemId);
+                const res = await fetch(`/api/knowledge/${itemId}/duplicate`, { method: 'POST' });
+                if (res.ok) {
+                    const newItem = await res.json();
+                    router.push(`/knowledge/${newItem.id}`);
+                } else {
+                    alert(t('failedToDuplicate') || 'Failed to duplicate');
+                    setKbActionLoading(null);
+                }
+            }
+        });
     }
 
     async function handleNewVersionKB(itemId: string) {
-        if (!confirm(tk('confirmNewVersion') || 'Create a new draft version?')) return;
-        setKbActionLoading(itemId);
-        const res = await fetch(`/api/knowledge/${itemId}/version`, { method: 'POST' });
-        if (res.ok) {
-            const fresh = await fetch(`/api/machines/${id}`);
-            setMachine(await fresh.json());
-        } else {
-            const data = await res.json();
-            alert(data.error || 'Failed to create new version');
-        }
-        setKbActionLoading(null);
+        setConfirmConfig({
+            isOpen: true,
+            title: tc('confirm'),
+            message: tk('confirmNewVersion') || 'Create a new draft version?',
+            confirmText: tk('createNewVersion'),
+            variant: 'default',
+            onConfirm: async () => {
+                setKbActionLoading(itemId);
+                const res = await fetch(`/api/knowledge/${itemId}/version`, { method: 'POST' });
+                if (res.ok) {
+                    const fresh = await fetch(`/api/machines/${id}`);
+                    setMachine(await fresh.json());
+                } else {
+                    const data = await res.json();
+                    alert(data.error || t('failedToCreateVersion') || 'Failed to create new version');
+                }
+                setKbActionLoading(null);
+            }
+        });
     }
 
     async function handleDelete() {
-        if (!confirm(t('deleteMachine'))) return;
-        const res = await fetch(`/api/machines/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-            const locale = window.location.pathname.split('/')[1];
-            window.location.href = `/${locale}/machines`;
-        } else {
-            const err = await res.json();
-            alert(err.error);
-        }
+        setConfirmConfig({
+            isOpen: true,
+            title: tc('confirm'),
+            message: t('deleteMachine'),
+            confirmText: tc('delete'),
+            variant: 'danger',
+            onConfirm: async () => {
+                const res = await fetch(`/api/machines/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    const locale = window.location.pathname.split('/')[1];
+                    window.location.href = `/${locale}/machines`;
+                } else {
+                    const err = await res.json();
+                    alert(err.error);
+                }
+            }
+        });
     }
 
     async function handleDuplicate() {
@@ -171,6 +203,36 @@ export default function MachineProfilePage() {
         }
     }
 
+    async function handleExcelExport() {
+        if (!machine) return;
+
+        const wsData: any[][] = [
+            ['Machine History Export'],
+            ['Machine Name', machine.name],
+            ['Serial Number', machine.serialNumber || 'N/A'],
+            ['Department', machine.department.name],
+            ['Export Date', new Date().toLocaleDateString()],
+            [],
+            ['Title', 'Type', 'Status', 'Last Updated']
+        ];
+
+        machine.knowledgeItems.forEach(item => {
+            wsData.push([
+                item.title,
+                tk(`types.${item.type}`),
+                tk(`statuses.${item.status}`),
+                new Date(item.updatedAt).toLocaleDateString()
+            ]);
+        });
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        ws['!cols'] = [{ wch: 50 }, { wch: 20 }, { wch: 15 }, { wch: 15 }];
+
+        XLSX.utils.book_append_sheet(wb, ws, 'History');
+        XLSX.writeFile(wb, `${machine.name.replace(/\s+/g, '_')}_History.xlsx`);
+    }
+
     if (loading) {
         return <div className="py-12 text-center text-muted-foreground">{tc('loading')}</div>;
     }
@@ -182,32 +244,32 @@ export default function MachineProfilePage() {
     const qrUrl = `${domain}/machines/${machine.id}`;
 
     return (
-        <div className="mx-auto max-w-5xl space-y-6">
+        <div className="mx-auto max-w-6xl space-y-6 pb-12">
             {/* Top bar: Back + Actions */}
             <div className="flex items-center justify-between">
                 <button
                     onClick={() => window.history.back()}
-                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors group"
                 >
-                    <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />
+                    <ArrowLeft className="h-4 w-4 rtl:-scale-x-100 group-hover:-translate-x-1 transition-transform" />
                     {tc('back')}
                 </button>
 
                 <div className="flex items-center gap-2">
                     {can('machines.create') && (
                         <button
-                            onClick={handleDuplicate}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-accent transition-colors"
                             title={t('duplicateMachine')}
+                            onClick={handleDuplicate}
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-border/50 bg-card px-4 py-2 text-sm font-semibold hover:bg-accent hover:scale-[1.02] active:scale-[0.98] transition-all shadow-sm"
                         >
                             <Copy className="h-4 w-4" />
-                            {t('duplicateMachine')}
+                            <span className="hidden sm:inline">{t('duplicateMachine')}</span>
                         </button>
                     )}
                     {can('machines.edit') && !editing && (
                         <button
                             onClick={startEdit}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
                         >
                             <Pencil className="h-4 w-4" />
                             {tc('edit')}
@@ -215,155 +277,179 @@ export default function MachineProfilePage() {
                     )}
                     {can('machines.delete') && (
                         <button
+                            title={tc('delete')}
                             onClick={handleDelete}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/30 px-3 py-1.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-2 text-sm font-semibold text-destructive hover:bg-destructive/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
                         >
                             <Trash2 className="h-4 w-4" />
-                            {tc('delete')}
+                            <span className="hidden sm:inline">{tc('delete')}</span>
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 lg:grid-cols-4">
                 {/* Profile Card */}
-                <div className="md:col-span-2 space-y-6">
-                    <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                        {editing ? (
-                            /* ── Inline Edit Form ── */
-                            <div className="space-y-4">
-                                <h2 className="text-lg font-semibold mb-2">{tc('edit')} — {machine.name}</h2>
-                                <div>
-                                    <label className="block text-sm font-medium text-muted-foreground mb-1">{t('machineName')}</label>
-                                    <input
-                                        type="text"
-                                        value={form.name}
-                                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                        className="input-field"
-                                        autoFocus
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-muted-foreground mb-1">{t('serialNumberOptional')}</label>
-                                    <input
-                                        type="text"
-                                        value={form.serialNumber}
-                                        onChange={(e) => setForm({ ...form, serialNumber: e.target.value })}
-                                        className="input-field"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-muted-foreground mb-1">{tc('department')}</label>
-                                    <select
-                                        value={form.departmentId}
-                                        onChange={(e) => setForm({ ...form, departmentId: e.target.value })}
-                                        className="input-field"
-                                    >
-                                        {departments.map(d => (
-                                            <option key={d.id} value={d.id}>{d.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="flex gap-2 pt-2">
-                                    <button
-                                        onClick={handleSave}
-                                        disabled={saving}
-                                        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
-                                    >
-                                        <Check className="h-4 w-4 inline-block me-1" /> {tc('save')}
-                                    </button>
-                                    <button
-                                        onClick={cancelEdit}
-                                        className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
-                                    >
-                                        <X className="h-4 w-4 inline-block me-1" /> {tc('cancel')}
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            /* ── View Mode ── */
-                            <>
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                                        <Settings2 className="h-8 w-8" />
-                                    </div>
-                                    <div>
-                                        <h1 className="text-3xl font-bold tracking-tight">{machine.name}</h1>
-                                        <p className="text-muted-foreground text-lg">{machine.department.name}</p>
-                                    </div>
-                                </div>
+                <div className="lg:col-span-3 space-y-6">
+                    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm">
+                        {/* Premium Header Background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50" />
 
-                                <dl className="grid grid-cols-2 gap-4 text-sm">
-                                    <div className="space-y-1">
-                                        <dt className="text-muted-foreground">{t('serialNumberOptional')}</dt>
-                                        <dd className="font-medium">{machine.serialNumber || '—'}</dd>
+                        <div className="relative p-6 sm:p-8">
+                            {editing ? (
+                                /* ── Inline Edit Form ── */
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h2 className="text-xl font-bold tracking-tight">{tc('edit')} — {machine.name}</h2>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={handleSave}
+                                                disabled={saving}
+                                                className="rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all shadow-md shadow-primary/10"
+                                            >
+                                                {saving ? tc('loading') : <><Check className="h-4 w-4 inline-block me-1" /> {tc('save')}</>}
+                                            </button>
+                                            <button
+                                                onClick={cancelEdit}
+                                                className="rounded-xl border border-border/50 bg-background/50 px-4 py-2 text-sm font-bold hover:bg-accent transition-all"
+                                            >
+                                                <X className="h-4 w-4 inline-block me-1" /> {tc('cancel')}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="space-y-1">
-                                        <dt className="text-muted-foreground">{tc('createdAt')}</dt>
-                                        <dd className="font-medium flex items-center gap-2">
-                                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                                            {new Date(machine.createdAt).toLocaleDateString()}
-                                        </dd>
+                                    <div className="grid gap-4 sm:grid-cols-2">
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 ml-1">{t('machineName')}</label>
+                                            <input
+                                                type="text"
+                                                value={form.name}
+                                                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                                className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 ml-1">{t('serialNumberOptional')}</label>
+                                            <input
+                                                type="text"
+                                                value={form.serialNumber}
+                                                onChange={(e) => setForm({ ...form, serialNumber: e.target.value })}
+                                                className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2 space-y-1.5">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 ml-1">{tc('department')}</label>
+                                            <select
+                                                value={form.departmentId}
+                                                onChange={(e) => setForm({ ...form, departmentId: e.target.value })}
+                                                className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none appearance-none transition-all"
+                                            >
+                                                {departments.map(d => (
+                                                    <option key={d.id} value={d.id}>{d.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div className="space-y-1">
-                                        <dt className="text-muted-foreground">ID</dt>
-                                        <dd className="font-mono text-xs truncate" title={machine.id}>{machine.id}</dd>
+                                </div>
+                            ) : (
+                                /* ── View Mode ── */
+                                <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+                                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/10 shadow-inner">
+                                        <Settings2 className="h-10 w-10" />
                                     </div>
-                                </dl>
-                            </>
-                        )}
+                                    <div className="flex-1 space-y-6">
+                                        <div>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">{machine.department.name}</p>
+                                            <h1 className="text-3xl font-bold tracking-tight text-foreground/90">{machine.name}</h1>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                                            <div className="space-y-1">
+                                                <dt className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{t('serialNumberOptional')}</dt>
+                                                <dd className="text-sm font-bold text-foreground/80">{machine.serialNumber || '—'}</dd>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <dt className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{tc('createdAt')}</dt>
+                                                <dd className="text-sm font-bold text-foreground/80 flex items-center gap-1.5">
+                                                    <Calendar className="h-3.5 w-3.5 text-muted-foreground/50" />
+                                                    {new Date(machine.createdAt).toLocaleDateString()}
+                                                </dd>
+                                            </div>
+                                            <div className="space-y-1 hidden sm:block">
+                                                <dt className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{tc('systemId')}</dt>
+                                                <dd className="text-[11px] font-mono text-muted-foreground/70 truncate" title={machine.id}>{machine.id.slice(0, 8)}...</dd>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* History Section */}
-                    <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-                        <div className="border-b border-border bg-muted/40 px-6 py-4">
-                            <h2 className="text-lg font-semibold flex items-center gap-2">
-                                <FileText className="h-5 w-5 text-primary" />
+                    <div className="rounded-2xl border border-border/50 bg-card shadow-sm overflow-hidden">
+                        <div className="border-b border-border/50 bg-muted/20 px-6 py-4 flex items-center justify-between">
+                            <h2 className="text-base font-bold flex items-center gap-2.5 text-foreground/80">
+                                <FileText className="h-5 w-5 text-primary/70" />
                                 {t('knowledgeHistory')}
                             </h2>
+                            {machine.knowledgeItems.length > 0 && (
+                                <button
+                                    onClick={handleExcelExport}
+                                    className="inline-flex items-center gap-2 rounded-xl border border-green-500/20 bg-green-500/5 px-3 py-1.5 text-xs font-bold text-green-600 hover:bg-green-500/10 transition-all"
+                                >
+                                    <FileSpreadsheet className="h-4 w-4" />
+                                    <span>{tc('exportXlsx')}</span>
+                                </button>
+                            )}
                         </div>
                         <div className="p-0">
                             {machine.knowledgeItems.length === 0 ? (
-                                <div className="p-8 text-center text-muted-foreground">
-                                    {t('noHistory')}
+                                <div className="p-20 text-center space-y-2 bg-card/10">
+                                    <div className="h-12 w-12 rounded-2xl bg-muted/30 flex items-center justify-center mx-auto mb-4">
+                                        <FileText className="h-6 w-6 text-muted-foreground/30" />
+                                    </div>
+                                    <p className="text-sm font-medium text-muted-foreground/50">
+                                        {t('noHistory')}
+                                    </p>
                                 </div>
                             ) : (
-                                <div className="divide-y divide-border">
+                                <div className="divide-y divide-border/50">
                                     {machine.knowledgeItems.map(item => (
                                         <div
                                             key={item.id}
-                                            className="flex items-center justify-between p-4 hover:bg-accent transition-colors"
+                                            className="group flex items-center justify-between p-4 px-6 hover:bg-primary/5 transition-all"
                                         >
                                             <Link href={`/knowledge/${item.id}`} className="flex-1 block">
-                                                <h3 className="font-medium text-primary hover:underline">{item.title}</h3>
-                                                <div className="text-xs text-muted-foreground mt-1 space-x-2">
-                                                    <span>{tk(`types.${item.type}`)}</span>
-                                                    <span>•</span>
-                                                    <span>{new Date(item.updatedAt).toLocaleDateString()}</span>
+                                                <h3 className="text-sm font-bold text-foreground/80 group-hover:text-primary transition-colors">{item.title}</h3>
+                                                <div className="flex items-center gap-3 mt-1">
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">{tk(`types.${item.type}`)}</span>
+                                                    <span className="text-muted-foreground/30">•</span>
+                                                    <span className="text-[10px] font-bold text-muted-foreground/60">{new Date(item.updatedAt).toLocaleDateString()}</span>
                                                 </div>
                                             </Link>
-                                            <div className="flex items-center gap-3">
-                                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[item.status]}`}>
+                                            <div className="flex items-center gap-4">
+                                                <span className={cn('text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border', statusColors[item.status])}>
                                                     {tk(`statuses.${item.status}`)}
                                                 </span>
                                                 {can('knowledge.create') && (
-                                                    <div className="flex gap-1">
+                                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                         <button
                                                             onClick={() => handleDuplicateKB(item.id)}
                                                             disabled={kbActionLoading === item.id}
-                                                            className="p-1.5 rounded hover:bg-border/50 transition-colors disabled:opacity-50"
+                                                            className="p-1.5 rounded-lg hover:bg-white dark:hover:bg-card border border-transparent hover:border-border/50 transition-all text-muted-foreground hover:text-primary"
                                                             title={tk('duplicate')}
                                                         >
-                                                            <Copy className="h-4 w-4 text-muted-foreground" />
+                                                            <Copy className="h-4 w-4" />
                                                         </button>
                                                         {(item.status === 'APPROVED' || item.status === 'ARCHIVED') && (
                                                             <button
                                                                 onClick={() => handleNewVersionKB(item.id)}
                                                                 disabled={kbActionLoading === item.id}
-                                                                className="p-1.5 rounded hover:bg-border/50 transition-colors disabled:opacity-50"
+                                                                className="p-1.5 rounded-lg hover:bg-white dark:hover:bg-card border border-transparent hover:border-border/50 transition-all text-muted-foreground hover:text-primary"
                                                                 title={tk('createNewVersion')}
                                                             >
-                                                                <FilePlus className="h-4 w-4 text-primary" />
+                                                                <FilePlus className="h-4 w-4" />
                                                             </button>
                                                         )}
                                                     </div>
@@ -378,18 +464,18 @@ export default function MachineProfilePage() {
                 </div>
 
                 {/* QR Code Sidebar */}
-                <div className="space-y-6">
-                    <div className="rounded-xl border border-border bg-card p-6 shadow-sm flex flex-col items-center text-center">
-                        <h3 className="font-semibold mb-4">{t('qrCodeTitle')}</h3>
-                        <div id="qr-print-zone" className="bg-white p-4 rounded-xl border shadow-inner mb-4">
+                <div className="lg:col-span-1 space-y-6">
+                    <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm flex flex-col items-center text-center">
+                        <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-4">{t('qrCodeTitle')}</h3>
+                        <div id="qr-print-zone" className="bg-white p-5 rounded-2xl border border-border shadow-inner mb-6 w-full aspect-square flex items-center justify-center">
                             <QRCode value={qrUrl} size={180} className="w-full h-auto" />
                         </div>
-                        <p className="text-xs text-muted-foreground mb-4 px-2">
+                        <p className="text-[11px] font-medium text-muted-foreground leading-relaxed mb-6 px-2">
                             {t('qrCodeDesc')}
                         </p>
                         <button
                             onClick={() => window.print()}
-                            className="w-full inline-flex justify-center items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium hover:bg-secondary/80 transition-colors"
+                            className="w-full inline-flex justify-center items-center gap-2 rounded-xl bg-primary/10 px-4 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all border border-primary/20"
                         >
                             <Printer className="h-4 w-4" />
                             {t('printQr')}
@@ -419,6 +505,16 @@ export default function MachineProfilePage() {
                     }
                 }
             `}</style>
+
+            <ConfirmModal
+                isOpen={confirmConfig.isOpen}
+                title={confirmConfig.title}
+                message={confirmConfig.message}
+                variant={confirmConfig.variant}
+                confirmText={confirmConfig.confirmText}
+                onConfirm={confirmConfig.onConfirm}
+                onCancel={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))}
+            />
         </div>
     );
 }

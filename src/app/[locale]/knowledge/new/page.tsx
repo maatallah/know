@@ -14,6 +14,7 @@ interface Department {
 interface Machine {
     id: string;
     name: string;
+    departmentId: string;
 }
 
 const KNOWLEDGE_TYPES = [
@@ -65,7 +66,19 @@ export default function NewKnowledgePage() {
     }, []);
 
     function update(field: string, value: string) {
-        setForm((prev) => ({ ...prev, [field]: value }));
+        setForm((prev) => {
+            const newForm = { ...prev, [field]: value };
+            
+            // Trigger machine reset if department changes
+            if (field === 'departmentId') {
+                const currentMachine = machines.find(m => m.id === prev.machineId);
+                if (currentMachine && currentMachine.departmentId !== value) {
+                    newForm.machineId = '';
+                }
+            }
+            
+            return newForm;
+        });
     }
 
     async function handleSubmit(e: React.FormEvent) {
@@ -180,9 +193,11 @@ export default function NewKnowledgePage() {
                             className="input-field"
                         >
                             <option value="">{tc('none')}</option>
-                            {machines.map((m) => (
-                                <option key={m.id} value={m.id}>{m.name}</option>
-                            ))}
+                            {machines
+                                .filter((m) => !form.departmentId || m.departmentId === form.departmentId)
+                                .map((m) => (
+                                    <option key={m.id} value={m.id}>{m.name}</option>
+                                ))}
                         </select>
                     </FormField>
                 </div>

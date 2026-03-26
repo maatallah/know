@@ -39,7 +39,32 @@
         "backToDashboard": "Retour au tableau de bord",
         "downloads": "téléchargements",
         "uploadFile": "Télécharger un fichier",
-        "attachments": "Pièces jointes"
+        "attachments": "Pièces jointes",
+        "viewAll": "Voir tout",
+        "results": "résultats",
+        "somethingWentWrong": "Une erreur s'est produite",
+        "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+        "tryAgain": "Réessayer",
+        "capture": "Capturer",
+        "upload": "Télécharger",
+        "uploading": "Téléchargement...",
+        "exportPdf": "EXPORTER PDF",
+        "exportXlsx": "EXPORTER XLSX",
+        "systemId": "ID Système",
+        "error": "Erreur",
+        "preview": "Aperçu",
+        "recordVideo": "Enregistrer une vidéo",
+        "takePhoto": "Prendre une photo",
+        "recording": "Enregistrement...",
+        "photo": "Photo",
+        "video": "Vidéo",
+        "retake": "Reprendre",
+        "useMedia": "Utiliser le média",
+        "cameraError": "Impossible d'accéder à la caméra/microphone.",
+        "uploadFailed": "Échec du téléchargement",
+        "namePlaceholder": "Jean Dupont",
+        "emailPlaceholder": "nom@entreprise.com",
+        "passwordPlaceholder": "••••••••"
     },
     "nav": {
         "dashboard": "Tableau de bord",
@@ -49,7 +74,8 @@
         "gaps": "Lacunes de connaissances",
         "users": "Utilisateurs",
         "audit": "Journal d'audit",
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "scanQr": "Scanner code machine"
     },
     "auth": {
         "login": "Se connecter",
@@ -59,7 +85,9 @@
         "loginTitle": "Connectez-vous à votre compte",
         "loginSubtitle": "Accédez à la plateforme de connaissances opérationnelles",
         "invalidCredentials": "Email ou mot de passe invalide",
-        "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter."
+        "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+        "emailPlaceholder": "admin@exemple.com",
+        "passwordPlaceholder": "••••••••"
     },
     "dashboard": {
         "title": "Tableau de bord",
@@ -135,10 +163,27 @@
         "duplicate": "Dupliquer",
         "createNewVersion": "Nouvelle Version",
         "confirmDuplicate": "Dupliquer cette procédure pour créer un nouvel élément dans la base de connaissances ?",
-        "confirmNewVersion": "Créer une nouvelle version brouillon ? La version actuelle restera approuvée pendant que vous travaillez."
+        "confirmNewVersion": "Créer une nouvelle version brouillon ? La version actuelle restera approuvée pendant que vous travaillez.",
+        "confirmArchive": "Êtes-vous sûr de vouloir archiver cette procédure ? Elle deviendra en lecture seule.",
+        "confirmDeleteAttachment": "Êtes-vous sûr de vouloir supprimer définitivement cette pièce jointe ?",
+        "item": "Article",
+        "items": "Articles",
+        "requests": "Demandes",
+        "approvalCommentRequired": "Le commentaire d'approbation est obligatoire",
+        "approvalCommentPlaceholder": "Saisissez vos commentaires d'approbation ici (obligatoire)...",
+        "failedToDuplicate": "Échec de la duplication",
+        "failedToCreateVersion": "Échec de la création d'une nouvelle version",
+        "archivedNotice": "Cet élément a été archivé et est maintenant en lecture seule.",
+        "noMediaAttached": "Aucun média joint pour le moment"
     },
     "gaps": {
         "title": "Lacunes de connaissances",
+        "subtitle": "Suivre et gérer les lacunes de connaissances identifiées",
+        "rejectReasonTitle": "Raison de la fermeture",
+        "closeGapModalTitle": "Fermer la lacune",
+        "closeGapModalDesc": "Puisqu'aucune documentation n'est liée à cette lacune, veuillez fournir une raison pour sa fermeture.",
+        "rejectReasonPlaceholder": "ex: Demande en double, procédure invalide...",
+        "confirmClose": "Fermer la lacune",
         "submitNew": "Soumettre une demande",
         "gapTitle": "Titre",
         "gapTitlePlaceholder": "Procédure manquante ou amélioration...",
@@ -165,6 +210,7 @@
         "users": "utilisateurs",
         "machines": "machines",
         "items": "articles",
+        "activeUnits": "{count} unités organisationnelles actives",
         "deleteDepartment": "Supprimer ce département ?"
     },
     "machines": {
@@ -176,9 +222,18 @@
         "noHistory": "Aucune procédure ou guide lié à cette machine pour le moment.",
         "qrCodeTitle": "Code QR de la machine",
         "qrCodeDesc": "Scannez ce code avec n'importe quel appareil pour accéder instantanément au profil et à l'historique de maintenance de cette machine.",
-        "printQr": "Imprimer l'étiquette QR",
+        "printQr": "Imprimer QR Label",
         "deleteMachine": "Supprimer cette machine ?",
-        "duplicateMachine": "Dupliquer la machine"
+        "duplicateMachine": "Dupliquer la machine",
+        "invalidQr": "Code QR de machine invalide",
+        "invalidUrl": "Le code QR scanné n'est pas une URL valide",
+        "scanDescription": "Pointez votre caméra sur l'étiquette QR d'une machine pour consulter instantanément son profil et son historique.",
+        "devicesRegistered": "appareils actuellement enregistrés",
+        "machineNamePlaceholder": "ex. Moule d'injection A1",
+        "serialNumberPlaceholder": "NS-XXXX-XXXX",
+        "noSerialNumber": "sans numéro de série",
+        "failedToDuplicate": "Échec de la duplication",
+        "failedToCreateVersion": "Échec de la création d'une nouvelle version"
     },
     "users": {
         "newUser": "Nouvel utilisateur",
@@ -190,17 +245,113 @@
             "EXPERT": "Expert",
             "REVIEWER": "Réviseur",
             "STANDARD_USER": "Utilisateur standard"
-        }
+        },
+        "manageAccessSubtitle": "Gérer l'accès à la plateforme et attribuer les rôles utilisateurs"
     },
     "audit": {
+        "title": "Journal d'audit",
+        "subtitle": "Historique de traçabilité et des opérations de sécurité",
         "time": "Heure",
         "action": "Action",
         "entity": "Entité",
-        "user": "Utilisateur"
+        "user": "Utilisateur",
+        "allActions": "Toutes les actions",
+        "timestamp": "Horodatage",
+        "involvedPerson": "Personne concernée",
+        "operation": "Opération",
+        "targetResource": "Ressource cible",
+        "impactDetails": "Détails de l'impact",
+        "noActivitiesTimeframe": "Aucune activité enregistrée dans cette période.",
+        "cleanupLogs": "Nettoyer les journaux d'audit",
+        "cleanupConfirm": "Êtes-vous sûr de vouloir supprimer définitivement les anciens journaux d'audit selon les seuils du système ?",
+        "cleanSuccess": "Journaux d'audit nettoyés avec succès !",
+        "systemAuto": "Système Auto",
+        "noExtraData": "Aucune donnée supplémentaire",
+        "actionLabels": {
+            "CREATE": "Création",
+            "UPDATE": "Mise à jour",
+            "DELETE": "Suppression",
+            "APPROVAL": "Approbation",
+            "SUBMIT_REVIEW": "Soumission",
+            "ARCHIVE": "Archivage",
+            "LOGIN": "Connexion"
+        },
+        "entityLabels": {
+            "Knowledge": "Connaissance",
+            "User": "Utilisateur",
+            "Machine": "Machine",
+            "Department": "Département",
+            "KnowledgeGapRequest": "Demande de lacune",
+            "AuditLog": "Journal d'audit",
+            "Comment": "Commentaire",
+            "Attachment": "Pièce jointe",
+            "KNOWLEDGE": "Connaissance",
+            "USER": "Utilisateur",
+            "MACHINE": "Machine",
+            "DEPARTMENT": "Département",
+            "KNOWLEDGE_GAP_REQUEST": "Demande de lacune",
+            "AUDIT_LOG": "Journal d'audit",
+            "COMMENT": "Commentaire",
+            "ATTACHMENT": "Pièce jointe"
+        },
+        "detailsLabels": {
+            "status": "Statut",
+            "reason": "Raison",
+            "rejectionReason": "Raison du rejet",
+            "comment": "Commentaire",
+            "name": "Nom",
+            "email": "Email",
+            "role": "Rôle",
+            "departmentId": "ID Département",
+            "note": "Note"
+        },
+        "detailsValues": {
+            "CLOSED": "Fermé",
+            "OPEN": "Ouvert",
+            "PENDING": "En attente",
+            "APPROVED": "Approuvé",
+            "REJECTED": "Rejeté"
+        }
     },
     "theme": {
         "light": "Clair",
         "dark": "Sombre",
         "system": "Système"
+    },
+    "settings": {
+        "title": "Paramètres du profil",
+        "systemAccount": "Compte Système",
+        "preferences": "Préférences",
+        "noteAdmin": "Remarque : Votre e-mail, votre rôle et votre département sont contrôlés par les administrateurs du système.",
+        "language": "Langue",
+        "theme": "Thème",
+        "languages": {
+            "en": "Anglais (US)",
+            "fr": "Français (France)",
+            "ar": "العربية (Arabe)"
+        },
+        "themes": {
+            "system": "Système",
+            "light": "Mode clair",
+            "dark": "Mode sombre"
+        },
+        "saving": "Enregistrement...",
+        "saved": "Enregistré !",
+        "namePlaceholder": "Votre nom",
+        "manageProfileSubtitle": "Gérer vos préférences de compte et vos informations personnelles",
+        "failedToUpdateProfile": "Échec de la mise à jour du profil",
+        "errorOccurred": "Une erreur s'est produite",
+        "systemSettings": "Paramètres système globaux",
+        "auditKeepLatest": "Journal d'audit : Conserver les X derniers enregistrements",
+        "auditMaxAgeDays": "Journal d'audit : Supprimer les logs de plus de (jours)",
+        "auditKeepLatestHelp": "Spécifiez le nombre maximum de journaux les plus récents à conserver dans la base de données.",
+        "auditMaxAgeHelp": "Les journaux plus anciens que ce nombre de jours seront supprimés lors du nettoyage.",
+        "globalSettingsDesc": "Ces paramètres affectent tous les administrateurs et les tâches de maintenance en arrière-plan."
+    },
+    "notifications": {
+        "reviewRequiredSubject": "Révision requise : {title}",
+        "reviewRequiredMessage": "L'utilisateur {name} a soumis un nouvel élément de connaissance pour votre révision.\nVeuillez réviser et approuver le brouillon sur la plateforme.",
+        "gapAssignedSubject": "Fjowe de connaissance assignée : {title}",
+        "gapAssignedMessage": "Vous avez été assigné pour répondre à une demande de documentation concernant :\n\"{title}\"\nLe statut a été mis à jour sur ASSIGNÉ."
     }
 }

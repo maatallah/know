@@ -8,48 +8,50 @@
    ============================================ */
 
 :root {
-  --background: 0 0% 98%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --primary: 221 83% 53%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 210 40% 96%;
-  --accent-foreground: 222 47% 11%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 221 83% 53%;
-  --radius: 0.75rem;
+  /* Vintage Theme - Light Mode */
+  --background: 39 37% 92%; /* #f3eee5 */
+  --foreground: 184 27% 15%; /* #1c3031 */
+  --card: 30 33% 99%; /* #fdfcfb */
+  --card-foreground: 184 27% 15%;
+  --popover: 30 33% 99%;
+  --popover-foreground: 184 27% 15%;
+  --primary: 182 49% 23%; /* #1e5658 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 174 37% 64%; /* #83c5be */
+  --secondary-foreground: 184 27% 15%;
+  --muted: 41 36% 85%; /* #e6ddca */
+  --muted-foreground: 180 10% 40%;
+  --accent: 12 76% 61%; /* #e76f51 */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 355 78% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 182 20% 70%;
+  --input: 182 20% 70%;
+  --ring: 12 76% 61%; /* match accent */
+  --radius: 0.8rem;
 }
 
 .dark {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 98%;
-  --card: 222 47% 9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222 47% 9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217 91% 60%;
-  --primary-foreground: 222 47% 6%;
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 63% 31%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 224 76% 48%;
+  /* Vintage Theme - Dark Mode (Moody Forest) */
+  --background: 184 33% 10%; /* #112122 */
+  --foreground: 39 37% 92%; /* #f3eee5 */
+  --card: 184 30% 14%; /* #192a2b */
+  --card-foreground: 39 37% 92%;
+  --popover: 184 30% 14%;
+  --popover-foreground: 39 37% 92%;
+  --primary: 174 37% 64%; /* Soft Teal */
+  --primary-foreground: 184 33% 10%;
+  --secondary: 182 49% 24%; /* Deep Teal */
+  --secondary-foreground: 39 37% 92%;
+  --muted: 184 21% 18%;
+  --muted-foreground: 180 10% 65%;
+  --accent: 12 76% 61%; /* Coral */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 355 78% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 184 21% 25%;
+  --input: 184 21% 25%;
+  --ring: 12 76% 61%;
 }
 
 /* ============================================
@@ -130,6 +132,13 @@ textarea {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Vintage Brutalist Shadows */
+  --shadow-sm: 2px 2px 0px hsl(var(--foreground) / 0.8);
+  --shadow: 3px 3px 0px hsl(var(--foreground) / 0.85);
+  --shadow-md: 4px 4px 0px hsl(var(--foreground) / 0.9);
+  --shadow-lg: 6px 6px 0px hsl(var(--foreground));
+  --shadow-xl: 8px 8px 0px hsl(var(--foreground));
 }
 
 /* ============================================
@@ -182,4 +191,15 @@ textarea {
 
 textarea.input-field {
   height: auto;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

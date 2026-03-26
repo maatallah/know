@@ -64,6 +64,7 @@ export const updateGapStatusSchema = z.object({
     status: z.enum(['OPEN', 'ASSIGNED', 'CLOSED']),
     assigneeId: z.string().optional().nullable(),
     linkedItemId: z.string().optional().nullable(),
+    rejectReason: z.string().max(1000).optional().nullable(),
 });
 
 // ============================================

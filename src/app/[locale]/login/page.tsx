@@ -63,7 +63,7 @@ export default function LoginPage() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            placeholder="admin@example.com"
+                            placeholder={t('emailPlaceholder') || "admin@example.com"}
                         />
                     </div>
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            placeholder="••••••••"
+                            placeholder={t('passwordPlaceholder') || "••••••••"}
                         />
                     </div>
 

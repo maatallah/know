@@ -21,6 +21,7 @@ export async function GET() {
         'knowledge.create', 'knowledge.edit', 'knowledge.delete', 'knowledge.workflow',
         'gaps.create', 'gaps.edit',
         'attachments.upload', 'attachments.delete',
+        'audit.view', 'audit.cleanup',
     ];
 
     const permissions: Record<string, boolean> = {};

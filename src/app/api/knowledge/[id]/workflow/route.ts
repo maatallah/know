@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth, isAuthError } from '@/lib/rbac';
 import { workflowActionSchema, validateRequest } from '@/lib/validations';
+import { sendNotification } from '@/lib/notifications';
+import { getTranslations } from 'next-intl/server';
 
 // POST /api/knowledge/[id]/workflow — Handle workflow transitions
 // body: { action: 'submit-review' | 'approve' | 'archive', comment?: string }
@@ -64,6 +66,22 @@ export async function POST(
                 },
             }),
         ]);
+
+        // Trigger notifications to department reviewers
+        const reviewers = await prisma.user.findMany({
+            where: { departmentId: item.departmentId, role: 'REVIEWER' },
+            select: { email: true, name: true, locale: true }
+        });
+        for (const reviewer of reviewers) {
+            const locale = reviewer.locale || 'en';
+            const tNotify = await getTranslations({ locale, namespace: 'notifications' });
+
+            await sendNotification({
+                to: reviewer.email,
+                subject: tNotify('reviewRequiredSubject', { title: item.title }),
+                message: tNotify('reviewRequiredMessage', { name: auth.session.user.name || auth.userId })
+            });
+        }
     } else if (action === 'approve') {
         if (item.status !== 'IN_REVIEW') {
             return NextResponse.json(

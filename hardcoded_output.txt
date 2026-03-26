@@ -1,0 +1,93 @@
+
+
+=== \src\app\not-found.tsx ===
+  - TEXT: Page not found
+  - TEXT: The page you are looking for does not exist or has been moved.
+  - TEXT: Back to Dashboard
+
+
+=== \src\app\[locale]\audit\page.tsx ===
+  - TEXT: Audit Log
+  - TEXT: Traceability and security operations history
+  - TEXT: All Actions
+  - TEXT: LOGIN
+  - TEXT: CREATE
+  - TEXT: UPDATE
+  - TEXT: APPROVAL
+  - TEXT: ARCHIVE
+  - TEXT: DELETE
+  - TEXT: Timestamp
+  - TEXT: Involved Person
+  - TEXT: Operation
+  - TEXT: Target Resource
+  - TEXT: Impact Details
+  - TEXT: No activities recorded in this timeframe.
+  - TEXT: No activities recorded.
+
+
+=== \src\app\[locale]\error.tsx ===
+  - TEXT: Something went wrong
+  - TEXT: An unexpected error occurred. Please try again.
+  - TEXT: Try again
+
+
+=== \src\app\[locale]\knowledge\[id]\page.tsx ===
+  - TEXT: Not found
+  - TEXT: EXPORT PDF
+  - TEXT: This item has been archived and is now read-only.
+  - TEXT: Capture
+  - TEXT: No media attached yet
+  - PLACEHOLDER: Type your approval comments here (required)...
+  - ALERT: Approval comment is mandatory
+  - ALERT: Failed to duplicate
+
+
+=== \src\app\[locale]\loading.tsx ===
+  - TEXT: Loading...
+
+
+=== \src\app\[locale]\login\page.tsx ===
+  - PLACEHOLDER: admin@example.com
+
+
+=== \src\app\[locale]\machines\page.tsx ===
+  - PLACEHOLDER: e.g. Injection Mold A1
+  - PLACEHOLDER: SN-XXXX-XXXX
+
+
+=== \src\app\[locale]\machines\[id]\page.tsx ===
+  - TEXT: System ID
+  - TEXT: EXPORT XLSX
+  - ALERT: Failed to duplicate
+
+
+=== \src\app\[locale]\settings\profile\page.tsx ===
+  - TEXT: Manage your account preferences and personal information
+  - ALERT: An error occurred
+
+
+=== \src\app\[locale]\users\page.tsx ===
+  - TEXT: Manage platform access and assign user roles
+  - PLACEHOLDER: John Doe
+  - PLACEHOLDER: name@company.com
+
+
+=== \src\components\camera-recorder-modal.tsx ===
+  - TEXT: Promise
+  - TEXT: Recording...
+  - TEXT: Photo
+  - TEXT: Video
+  - TEXT: Retake
+  - ALERT: Could not access camera/microphone.
+  - ALERT: Upload failed
+
+
+=== \src\components\language-switcher.tsx ===
+  - TITLE: Switch language
+
+
+=== \src\components\sidebar.tsx ===
+  - TEXT: Know
+
+
+Total hardcoded potentials found: 51

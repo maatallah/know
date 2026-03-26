@@ -17,6 +17,7 @@ interface GapDetail {
     submittedBy: { id: string; name: string | null };
     assignedTo: { id: string; name: string | null } | null;
     linkedItem: { id: string; title: string } | null;
+    rejectReason: string | null;
 }
 
 const gapStatusColors: Record<string, string> = {
@@ -33,6 +34,8 @@ export default function GapDetailPage() {
     const [gap, setGap] = useState<GapDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
+    const [showCloseModal, setShowCloseModal] = useState(false);
+    const [rejectReason, setRejectReason] = useState("");
 
     useEffect(() => {
         fetch(`/api/gaps/${id}`)
@@ -44,15 +47,20 @@ export default function GapDetailPage() {
             .finally(() => setLoading(false));
     }, [id]);
 
-    async function updateStatus(status: string) {
+    async function updateStatus(status: string, reason?: string) {
         setActionLoading(true);
         const res = await fetch(`/api/gaps/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status }),
+            body: JSON.stringify({ status, rejectReason: reason }),
         });
         if (res.ok) {
             setGap(await res.json());
+            setShowCloseModal(false);
+            setRejectReason("");
+        } else {
+            const data = await res.json();
+            alert(data.error || 'Operation failed');
         }
         setActionLoading(false);
     }
@@ -69,8 +77,8 @@ export default function GapDetailPage() {
                 <div>
                     <div className="flex items-center gap-2">
                         <h1 className="text-2xl font-bold">{gap.title}</h1>
-                        <span className={cn('rounded-full px-3 py-1 text-xs font-medium', gapStatusColors[gap.status])}>
-                            {gap.status}
+                        <span className={cn('rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider', gapStatusColors[gap.status])}>
+                            {t(`status${gap.status.charAt(0) + gap.status.slice(1).toLowerCase()}`)}
                         </span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">{t('submittedBy')} {gap.submittedBy.name}</p>
@@ -115,18 +123,57 @@ export default function GapDetailPage() {
                     )}
                     {(gap.status === 'OPEN' || gap.status === 'ASSIGNED') && (
                         <button
-                            onClick={() => updateStatus('CLOSED')}
+                            onClick={() => gap.linkedItem ? updateStatus('CLOSED') : setShowCloseModal(true)}
                             disabled={actionLoading}
                             className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-green-50 hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
                             {t('closeGap')}
                         </button>
                     )}
-                    {gap.status === 'CLOSED' && (
+                    {gap.status === 'CLOSED' && !gap.rejectReason && (
                         <p className="text-sm text-muted-foreground">{t('resolvedMsg')}</p>
                     )}
                 </div>
+                {gap.status === 'CLOSED' && gap.rejectReason && (
+                    <div className="mt-4 rounded-lg bg-destructive/5 p-4 border border-destructive/20">
+                        <h3 className="text-sm font-bold text-destructive">{t('rejectReasonTitle')}</h3>
+                        <p className="text-sm text-foreground/80 mt-1 whitespace-pre-wrap">{gap.rejectReason}</p>
+                    </div>
+                )}
             </div>
+
+            {/* Rejection Modal */}
+            {showCloseModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
+                    <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+                        <h3 className="text-lg font-bold">{t('closeGapModalTitle')}</h3>
+                        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{t('closeGapModalDesc')}</p>
+                        <textarea
+                            value={rejectReason}
+                            onChange={(e) => setRejectReason(e.target.value)}
+                            className="mt-4 w-full rounded-xl border border-border/50 bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[100px] resize-none transition-all placeholder:text-muted-foreground/50"
+                            placeholder={t('rejectReasonPlaceholder')}
+                            autoFocus
+                        />
+                        <div className="mt-6 flex items-center justify-end gap-3">
+                            <button
+                                onClick={() => setShowCloseModal(false)}
+                                className="rounded-xl px-4 py-2 text-sm font-bold text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                                disabled={actionLoading}
+                            >
+                                {tc('cancel')}
+                            </button>
+                            <button
+                                onClick={() => updateStatus('CLOSED', rejectReason)}
+                                disabled={!rejectReason.trim() || actionLoading}
+                                className="rounded-xl bg-destructive px-5 py-2 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors disabled:opacity-50 shadow-sm"
+                            >
+                                {t('confirmClose')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -37,6 +37,7 @@ export function UserMenu() {
     return (
         <div className="relative" ref={menuRef}>
             <button
+                title={user.name || user.email.split('@')[0]}
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 rounded-full border border-border bg-card p-1 pr-3 hover:bg-accent transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
@@ -49,8 +50,8 @@ export function UserMenu() {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-56 p-1 rounded-xl border border-border bg-card shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-3 py-2 border-b border-border/50">
+                <div className="absolute ltr:right-0 rtl:left-0 top-full mt-2 w-56 p-1 rounded-xl border border-border bg-card shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-3 py-2 border-b border-border/50 text-start">
                         <p className="text-sm font-medium truncate">{user.name}</p>
                         <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                         <div className="mt-1.5 flex flex-wrap gap-1">

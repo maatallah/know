@@ -94,30 +94,33 @@ export default function KnowledgeListPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-[1400px] mx-auto pb-10">
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground/90">{t('title')}</h1>
+                    <p className="text-sm text-muted-foreground mt-1">{total} {total === 1 ? t('item') : t('items')} documentation</p>
+                </div>
                 <Link
                     href="/knowledge/new"
-                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
                     <Plus className="h-4 w-4" />
                     {t('createNew')}
                 </Link>
             </div>
 
-            {/* Search + Filters */}
-            <div className="space-y-3">
+            {/* Search + Filters (Glassmorphism Container) */}
+            <div className="rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 space-y-4 shadow-sm">
                 <form onSubmit={handleSearch} className="flex flex-1 gap-2">
                     <div className="relative flex-1">
-                        <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder={tc('search')}
-                            className="flex h-10 w-full rounded-lg border border-input bg-background px-10 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            className="flex h-11 w-full rounded-xl border-border/50 bg-background/50 px-11 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/30 outline-none transition-all"
                         />
                         {search && (
                             <button
@@ -126,143 +129,122 @@ export default function KnowledgeListPage() {
                                     setSearch('');
                                     fetchItems('');
                                 }}
-                                className="absolute end-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors"
+                                className="absolute end-3 top-1/2 -translate-y-1/2 p-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
                             >
-                                <X className="h-3.5 w-3.5" />
-                                <span className="sr-only">Clear search</span>
+                                <X className="h-4 w-4" />
                             </button>
                         )}
                     </div>
                     <button
                         type="submit"
-                        className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium hover:bg-secondary/80 transition-colors"
+                        className="rounded-xl bg-primary/10 px-6 text-sm font-bold text-primary hover:bg-primary/20 transition-all border border-primary/20"
                     >
                         {tc('search')}
                     </button>
                 </form>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2.5">
                     {/* Status */}
-                    <select
+                    <FilterSelect
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="">{t('status')} — {tc('all')}</option>
-                        {['DRAFT', 'IN_REVIEW', 'APPROVED', 'ARCHIVED'].map((s) => (
-                            <option key={s} value={s}>
-                                {t(`statuses.${s}`)}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={setStatusFilter}
+                        options={['DRAFT', 'IN_REVIEW', 'APPROVED', 'ARCHIVED'].map(s => ({ value: s, label: t(`statuses.${s}`) }))}
+                        label={`${t('status')} — ${tc('all')}`}
+                    />
 
                     {/* Type */}
-                    <select
+                    <FilterSelect
                         value={typeFilter}
-                        onChange={(e) => setTypeFilter(e.target.value)}
-                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="">{t('type')} — {tc('all')}</option>
-                        {['MACHINE_PROCEDURE', 'WORK_INSTRUCTION', 'MAINTENANCE_GUIDE', 'TROUBLESHOOTING', 'SAFETY_INSTRUCTION', 'TRAINING_GUIDE'].map((tp) => (
-                            <option key={tp} value={tp}>
-                                {t(`types.${tp}`)}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={setTypeFilter}
+                        options={['MACHINE_PROCEDURE', 'WORK_INSTRUCTION', 'MAINTENANCE_GUIDE', 'TROUBLESHOOTING', 'SAFETY_INSTRUCTION', 'TRAINING_GUIDE'].map(tp => ({ value: tp, label: t(`types.${tp}`) }))}
+                        label={`${t('type')} — ${tc('all')}`}
+                    />
 
                     {/* Risk Level */}
-                    <select
+                    <FilterSelect
                         value={riskFilter}
-                        onChange={(e) => setRiskFilter(e.target.value)}
-                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="">{t('riskLevel')} — {tc('all')}</option>
-                        {['LOW', 'MEDIUM', 'HIGH'].map((r) => (
-                            <option key={r} value={r}>{t(`riskLevels.${r}`)}</option>
-                        ))}
-                    </select>
+                        onChange={setRiskFilter}
+                        options={['LOW', 'MEDIUM', 'HIGH'].map(r => ({ value: r, label: t(`riskLevels.${r}`) }))}
+                        label={`${t('riskLevel')} — ${tc('all')}`}
+                    />
 
                     {/* Criticality */}
-                    <select
+                    <FilterSelect
                         value={criticalityFilter}
-                        onChange={(e) => setCriticalityFilter(e.target.value)}
-                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="">{t('criticality')} — {tc('all')}</option>
-                        {['LOW', 'MEDIUM', 'HIGH'].map((c) => (
-                            <option key={c} value={c}>{t(`criticalityLevels.${c}`)}</option>
-                        ))}
-                    </select>
+                        onChange={setCriticalityFilter}
+                        options={['LOW', 'MEDIUM', 'HIGH'].map(c => ({ value: c, label: t(`criticalityLevels.${c}`) }))}
+                        label={`${t('criticality')} — ${tc('all')}`}
+                    />
 
                     {/* Department */}
-                    <select
+                    <FilterSelect
                         value={departmentFilter}
-                        onChange={(e) => setDepartmentFilter(e.target.value)}
-                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="">{t('department')} — {tc('all')}</option>
-                        {departments.map((d) => (
-                            <option key={d.id} value={d.id}>{d.name}</option>
-                        ))}
-                    </select>
+                        onChange={setDepartmentFilter}
+                        options={departments.map(d => ({ value: d.id, label: d.name }))}
+                        label={`${t('department')} — ${tc('all')}`}
+                    />
 
                     {/* Tags */}
-                    <select
+                    <FilterSelect
                         value={tagFilter}
-                        onChange={(e) => setTagFilter(e.target.value)}
-                        className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        <option value="">{t('tags')} — {tc('all')}</option>
-                        {allTags.map((tag) => (
-                            <option key={tag.id} value={tag.id}>
-                                {tag.name}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={setTagFilter}
+                        options={allTags.map(tag => ({ value: tag.id, label: tag.name }))}
+                        label={`${t('tags')} — ${tc('all')}`}
+                    />
                 </div>
             </div>
 
             {/* List */}
             {loading ? (
-                <div className="py-12 text-center text-muted-foreground">{tc('loading')}</div>
+                <div className="flex min-h-[40vh] items-center justify-center">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
+                </div>
             ) : items.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border py-12 text-center text-muted-foreground">
-                    {tc('noResults')}
+                <div className="rounded-2xl border border-dashed border-border/50 py-20 text-center bg-card/10">
+                    <BookOpen className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                    <p className="text-muted-foreground font-medium">{tc('noResults')}</p>
                 </div>
             ) : (
-                <div className="space-y-3">
+                <div className="grid gap-4 md:grid-cols-2">
                     {items.map((item) => (
                         <Link
                             key={item.id}
                             href={`/knowledge/${item.id}`}
-                            className="block rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30"
+                            className="group relative rounded-2xl border border-border/50 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:scale-[1.01] active:scale-[0.99] flex flex-col justify-between"
                         >
-                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                                <div className="flex-1 space-y-1">
-                                    <h3 className="font-semibold">{item.title}</h3>
-                                    {item.shortDescription && (
-                                        <p className="text-sm text-muted-foreground line-clamp-1">
-                                            {item.shortDescription}
-                                        </p>
-                                    )}
-                                    <div className="flex flex-wrap gap-2 pt-1">
-                                        <span className={cn('inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium', statusColors[item.status])}>
-                                            {t(`statuses.${item.status}`)}
-                                        </span>
-                                        <span className={cn('inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium', riskColors[item.riskLevel])}>
-                                            {t(`riskLevels.${item.riskLevel}`)}
-                                        </span>
-                                        <span className="inline-flex rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">
-                                            {t(`types.${item.type}`)}
-                                        </span>
+                            <div className="space-y-3">
+                                <div className="flex items-start justify-between">
+                                    <div className="space-y-1">
+                                        <h3 className="text-base font-bold text-foreground/90 group-hover:text-primary transition-colors line-clamp-1">{item.title}</h3>
+                                        <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/60">{item.department.name}</p>
                                     </div>
-                                </div>
-                                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                    <span className="flex items-center gap-1">
-                                        <Eye className="h-3.5 w-3.5" />
-                                        {item.viewCount}
+                                    <span className={cn('text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border', statusColors[item.status].replace('bg-', 'bg-').replace('text-', 'text-'))}>
+                                        {t(`statuses.${item.status}`)}
                                     </span>
-                                    <span>{item.department.name}</span>
+                                </div>
+
+                                {item.shortDescription && (
+                                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                                        {item.shortDescription}
+                                    </p>
+                                )}
+
+                                <div className="flex flex-wrap gap-2 pt-1">
+                                    <Badge label={t(`riskLevels.${item.riskLevel}`)} color={riskColors[item.riskLevel]} />
+                                    <Badge label={t(`types.${item.type}`)} color="bg-primary/5 text-primary border-primary/10" />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between mt-5 pt-4 border-t border-border/50">
+                                <div className="flex items-center gap-2">
+                                    <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary/5 text-primary text-[10px] font-bold border border-primary/10">
+                                        {(item.owner.name || '?')[0].toUpperCase()}
+                                    </div>
+                                    <span className="text-xs font-semibold text-muted-foreground">{item.owner.name}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground/60 bg-muted/30 px-2 py-1 rounded-lg">
+                                    <Eye className="h-3 w-3" />
+                                    {item.viewCount}
                                 </div>
                             </div>
                         </Link>
@@ -270,5 +252,30 @@ export default function KnowledgeListPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+function FilterSelect({ value, onChange, options, label }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; label: string }) {
+    return (
+        <select
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="h-10 rounded-xl border border-border/50 bg-background/50 px-3 text-xs font-bold text-muted-foreground hover:bg-background transition-colors outline-none focus:ring-2 focus:ring-primary/20 appearance-none min-w-[140px]"
+        >
+            <option value="">{label}</option>
+            {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                </option>
+            ))}
+        </select>
+    );
+}
+
+function Badge({ label, color }: { label: string; color: string }) {
+    return (
+        <span className={cn('inline-flex items-center rounded-lg px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight border shadow-sm', color)}>
+            {label}
+        </span>
     );
 }

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Building2, Plus, Pencil, Trash2, X, Check } from 'lucide-react';
 import { usePermissions } from '@/lib/usePermissions';
+import { ConfirmModal } from '@/components/confirm-modal';
 
 interface Department {
     id: string;
@@ -23,6 +24,7 @@ export default function DepartmentsPage() {
     const [showAdd, setShowAdd] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState({ name: '', description: '' });
+    const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchDepartments();
@@ -78,10 +80,10 @@ export default function DepartmentsPage() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm(td('deleteDepartment'))) return;
         const res = await fetch(`/api/departments/${id}`, { method: 'DELETE' });
         if (res.ok) {
             setDepartments((prev) => prev.filter((d) => d.id !== id));
+            setConfirmDeleteId(null);
         } else {
             const err = await res.json();
             alert(err.error);
@@ -89,41 +91,54 @@ export default function DepartmentsPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">{t('departments')}</h1>
-                {can('departments.create') && <button
-                    onClick={() => { setShowAdd(true); setEditingId(null); setForm({ name: '', description: '' }); }}
-                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
-                    <Plus className="h-4 w-4" /> {tc('create')}
-                </button>}
+        <div className="space-y-6 max-w-7xl mx-auto pb-12">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground/90">{t('departments')}</h1>
+                    <p className="text-sm text-muted-foreground mt-1">{td('activeUnits', { count: departments.length })}</p>
+                </div>
+                {can('departments.create') && (
+                    <button
+                        onClick={() => { setShowAdd(true); setEditingId(null); setForm({ name: '', description: '' }); }}
+                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                        <Plus className="h-4 w-4" /> {tc('create')}
+                    </button>
+                )}
             </div>
 
-            {/* Add form */}
+            {/* Add form (Glassmorphism) */}
             {showAdd && (
-                <div className="rounded-xl border border-primary/30 bg-card p-5 space-y-3">
-                    <h3 className="font-semibold">{td('newDepartment')}</h3>
-                    <input
-                        type="text"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        placeholder={td('departmentName')}
-                        className="input-field"
-                        autoFocus
-                    />
-                    <input
-                        type="text"
-                        value={form.description}
-                        onChange={(e) => setForm({ ...form, description: e.target.value })}
-                        placeholder={td('descriptionOptional')}
-                        className="input-field"
-                    />
-                    <div className="flex gap-2">
-                        <button onClick={handleSave} className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+                <div className="rounded-2xl border border-primary/20 bg-primary/5 backdrop-blur-sm p-6 space-y-4 shadow-inner">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-primary">{td('newDepartment')}</h3>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">{td('departmentName')}</label>
+                            <input
+                                type="text"
+                                value={form.name}
+                                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                placeholder={td('departmentName')}
+                                className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                autoFocus
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">{tc('description')}</label>
+                            <input
+                                type="text"
+                                value={form.description}
+                                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                                placeholder={td('descriptionOptional')}
+                                className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                        <button onClick={handleSave} className="rounded-xl bg-primary px-5 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-md shadow-primary/10">
                             <Check className="h-4 w-4 inline-block me-1" /> {tc('save')}
                         </button>
-                        <button onClick={cancelEdit} className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent">
+                        <button onClick={cancelEdit} className="rounded-xl border border-border/50 bg-background/50 px-5 py-2 text-sm font-bold hover:bg-accent transition-all text-muted-foreground">
                             <X className="h-4 w-4 inline-block me-1" /> {tc('cancel')}
                         </button>
                     </div>
@@ -131,60 +146,88 @@ export default function DepartmentsPage() {
             )}
 
             {loading ? (
-                <div className="py-12 text-center text-muted-foreground">{tc('loading')}</div>
+                <div className="flex min-h-[40vh] items-center justify-center">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
+                </div>
             ) : departments.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border py-12 text-center text-muted-foreground">
-                    {tc('noResults')}
+                <div className="rounded-2xl border border-dashed border-border/50 py-20 text-center bg-card/10">
+                    <Building2 className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                    <p className="text-muted-foreground font-medium">{tc('noResults')}</p>
                 </div>
             ) : (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {departments.map((d) => (
-                        <div key={d.id} className="rounded-xl border border-border bg-card p-5 shadow-sm">
+                        <div key={d.id} className="group relative rounded-2xl border border-border/50 bg-card p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:scale-[1.01] active:scale-[0.99] flex flex-col justify-between">
                             {editingId === d.id ? (
-                                <div className="space-y-3">
-                                    <input
-                                        type="text"
-                                        value={form.name}
-                                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                        className="input-field"
-                                        autoFocus
-                                    />
-                                    <input
-                                        type="text"
-                                        value={form.description}
-                                        onChange={(e) => setForm({ ...form, description: e.target.value })}
-                                        placeholder={tc('description')}
-                                        className="input-field"
-                                    />
+                                <div className="space-y-4">
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">{td('departmentName')}</label>
+                                        <input
+                                            type="text"
+                                            value={form.name}
+                                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                            placeholder={td('departmentName')}
+                                            className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                            autoFocus
+                                        />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">{tc('description')}</label>
+                                        <input
+                                            type="text"
+                                            value={form.description}
+                                            onChange={(e) => setForm({ ...form, description: e.target.value })}
+                                            placeholder={td('descriptionOptional')}
+                                            className="w-full rounded-xl border-border/50 bg-background/50 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        />
+                                    </div>
                                     <div className="flex gap-2">
-                                        <button onClick={handleSave} className="rounded bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"><Check className="h-3 w-3" /></button>
-                                        <button onClick={cancelEdit} className="rounded border border-border px-3 py-1.5 text-xs"><X className="h-3 w-3" /></button>
+                                        <button onClick={handleSave} className="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm shadow-primary/20 hover:bg-primary/90 transition-all"><Check className="h-4 w-4" /></button>
+                                        <button onClick={cancelEdit} className="rounded-lg border border-border/50 bg-background/50 px-3 py-1.5 text-xs font-bold text-muted-foreground hover:bg-accent transition-all"><X className="h-4 w-4" /></button>
                                     </div>
                                 </div>
                             ) : (
                                 <>
-                                    <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                                                <Building2 className="h-5 w-5" />
+                                    <div className="space-y-4">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/10 shadow-inner group-hover:scale-110 transition-transform">
+                                                    <Building2 className="h-6 w-6" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-foreground/90 group-hover:text-primary transition-colors">{d.name}</h3>
+                                                </div>
                                             </div>
-                                            <h3 className="font-semibold">{d.name}</h3>
+                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {can('departments.edit') && (
+                                                    <button onClick={() => startEdit(d)} className="p-1.5 rounded-lg border border-transparent hover:border-border/50 hover:bg-background transition-all text-muted-foreground hover:text-primary">
+                                                        <Pencil className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                                {can('departments.delete') && (
+                                                    <button onClick={() => setConfirmDeleteId(d.id)} className="p-1.5 rounded-lg border border-transparent hover:border-destructive/20 hover:bg-destructive/5 transition-all text-muted-foreground hover:text-destructive">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="flex gap-1">
-                                            {can('departments.edit') && <button onClick={() => startEdit(d)} className="p-1.5 rounded hover:bg-accent transition-colors">
-                                                <Pencil className="h-4 w-4 text-muted-foreground" />
-                                            </button>}
-                                            {can('departments.delete') && <button onClick={() => handleDelete(d.id)} className="p-1.5 rounded hover:bg-destructive/10 transition-colors">
-                                                <Trash2 className="h-4 w-4 text-destructive" />
-                                            </button>}
-                                        </div>
+                                        {d.description && <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{d.description}</p>}
                                     </div>
-                                    {d.description && <p className="text-sm text-muted-foreground mb-2">{d.description}</p>}
+
                                     {d._count && (
-                                        <div className="flex gap-3 text-xs text-muted-foreground">
-                                            <span>{d._count.users} {td('users')}</span>
-                                            <span>{d._count.machines} {td('machines')}</span>
-                                            <span>{d._count.knowledgeItems} {td('items')}</span>
+                                        <div className="mt-6 pt-4 border-t border-border/50 grid grid-cols-3 gap-2">
+                                            <div className="text-center">
+                                                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">{td('users')}</p>
+                                                <p className="text-xs font-bold text-foreground/70">{d._count.users}</p>
+                                            </div>
+                                            <div className="text-center border-x border-border/50">
+                                                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">{td('machines')}</p>
+                                                <p className="text-xs font-bold text-foreground/70">{d._count.machines}</p>
+                                            </div>
+                                            <div className="text-center">
+                                                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">{td('items')}</p>
+                                                <p className="text-xs font-bold text-foreground/70">{d._count.knowledgeItems}</p>
+                                            </div>
                                         </div>
                                     )}
                                 </>
@@ -193,6 +236,15 @@ export default function DepartmentsPage() {
                     ))}
                 </div>
             )}
+            <ConfirmModal
+                isOpen={!!confirmDeleteId}
+                title={tc('confirm')}
+                message={td('deleteDepartment')}
+                onConfirm={() => confirmDeleteId && handleDelete(confirmDeleteId)}
+                onCancel={() => setConfirmDeleteId(null)}
+                variant="danger"
+                confirmText={tc('delete')}
+            />
         </div>
     );
 }

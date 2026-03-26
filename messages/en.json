@@ -39,7 +39,32 @@
         "backToDashboard": "Back to Dashboard",
         "downloads": "downloads",
         "uploadFile": "Upload file",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "viewAll": "View all",
+        "results": "results",
+        "somethingWentWrong": "Something went wrong",
+        "unexpectedError": "An unexpected error occurred. Please try again.",
+        "tryAgain": "Try again",
+        "capture": "Capture",
+        "upload": "Upload",
+        "uploading": "Uploading...",
+        "exportPdf": "EXPORT PDF",
+        "exportXlsx": "EXPORT XLSX",
+        "systemId": "System ID",
+        "error": "Error",
+        "preview": "Preview",
+        "recordVideo": "Record Video",
+        "takePhoto": "Take Photo",
+        "recording": "Recording...",
+        "photo": "Photo",
+        "video": "Video",
+        "retake": "Retake",
+        "useMedia": "Use Media",
+        "cameraError": "Could not access camera/microphone.",
+        "uploadFailed": "Upload failed",
+        "namePlaceholder": "John Doe",
+        "emailPlaceholder": "name@company.com",
+        "passwordPlaceholder": "••••••••"
     },
     "nav": {
         "dashboard": "Dashboard",
@@ -49,7 +74,8 @@
         "gaps": "Knowledge Gaps",
         "users": "Users",
         "audit": "Audit Log",
-        "settings": "Settings"
+        "settings": "Settings",
+        "scanQr": "Scan machine code"
     },
     "auth": {
         "login": "Log In",
@@ -59,7 +85,9 @@
         "loginTitle": "Sign in to your account",
         "loginSubtitle": "Access the operational knowledge platform",
         "invalidCredentials": "Invalid email or password",
-        "sessionExpired": "Your session has expired. Please log in again."
+        "sessionExpired": "Your session has expired. Please log in again.",
+        "emailPlaceholder": "admin@example.com",
+        "passwordPlaceholder": "••••••••"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -135,10 +163,27 @@
         "duplicate": "Duplicate",
         "createNewVersion": "New Version",
         "confirmDuplicate": "Duplicate this procedure to create a new Knowledge Base item?",
-        "confirmNewVersion": "Create a new draft version? The current version will remain approved while you work."
+        "confirmNewVersion": "Create a new draft version? The current version will remain approved while you work.",
+        "confirmArchive": "Are you sure you want to archive this procedure? It will become read-only.",
+        "confirmDeleteAttachment": "Are you sure you want to permanently delete this attachment?",
+        "item": "Item",
+        "items": "Items",
+        "requests": "Requests",
+        "approvalCommentRequired": "Approval comment is mandatory",
+        "approvalCommentPlaceholder": "Type your approval comments here (required)...",
+        "failedToDuplicate": "Failed to duplicate",
+        "failedToCreateVersion": "Failed to create new version",
+        "archivedNotice": "This item has been archived and is now read-only.",
+        "noMediaAttached": "No media attached yet"
     },
     "gaps": {
         "title": "Knowledge Gaps",
+        "subtitle": "Track and manage identified knowledge gaps",
+        "rejectReasonTitle": "Reason for Closure",
+        "closeGapModalTitle": "Close Knowledge Gap",
+        "closeGapModalDesc": "Since no documentation is linked to this gap, please provide a reason for closing it.",
+        "rejectReasonPlaceholder": "e.g., Duplicate request, invalid procedure...",
+        "confirmClose": "Close Gap",
         "submitNew": "Submit Gap Request",
         "gapTitle": "Title",
         "gapTitlePlaceholder": "Missing procedure or improvement...",
@@ -165,6 +210,7 @@
         "users": "users",
         "machines": "machines",
         "items": "items",
+        "activeUnits": "{count} active organizational units",
         "deleteDepartment": "Delete this department?"
     },
     "machines": {
@@ -178,7 +224,16 @@
         "qrCodeDesc": "Scan this code with any device to instantly access this machine's profile and maintenance history.",
         "printQr": "Print QR Label",
         "deleteMachine": "Delete this machine?",
-        "duplicateMachine": "Duplicate machine"
+        "duplicateMachine": "Duplicate machine",
+        "invalidQr": "Invalid Machine QR Code",
+        "invalidUrl": "Scanned QR code is not a valid URL",
+        "scanDescription": "Point your camera at a machine's QR label to instantly pull up its profile and history.",
+        "devicesRegistered": "devices currently registered",
+        "machineNamePlaceholder": "e.g. Injection Mold A1",
+        "serialNumberPlaceholder": "SN-XXXX-XXXX",
+        "noSerialNumber": "no serial number",
+        "failedToDuplicate": "Failed to duplicate",
+        "failedToCreateVersion": "Failed to create new version"
     },
     "users": {
         "newUser": "New User",
@@ -190,17 +245,113 @@
             "EXPERT": "Expert",
             "REVIEWER": "Reviewer",
             "STANDARD_USER": "Standard User"
-        }
+        },
+        "manageAccessSubtitle": "Manage platform access and assign user roles"
     },
     "audit": {
+        "title": "Audit Log",
+        "subtitle": "Traceability and security operations history",
         "time": "Time",
         "action": "Action",
         "entity": "Entity",
-        "user": "User"
+        "user": "User",
+        "allActions": "All Actions",
+        "timestamp": "Timestamp",
+        "involvedPerson": "Involved Person",
+        "operation": "Operation",
+        "targetResource": "Target Resource",
+        "impactDetails": "Impact Details",
+        "noActivitiesTimeframe": "No activities recorded in this timeframe.",
+        "cleanupLogs": "Cleanup Audit Logs",
+        "cleanupConfirm": "Are you sure you want to permanently delete old audit logs based on the system thresholds?",
+        "cleanSuccess": "Audit logs pruned successfully!",
+        "systemAuto": "System Auto",
+        "noExtraData": "No extra data",
+        "actionLabels": {
+            "CREATE": "Create",
+            "UPDATE": "Update",
+            "DELETE": "Delete",
+            "APPROVAL": "Approval",
+            "SUBMIT_REVIEW": "Submit Review",
+            "ARCHIVE": "Archive",
+            "LOGIN": "Login"
+        },
+        "entityLabels": {
+            "Knowledge": "Knowledge",
+            "User": "User",
+            "Machine": "Machine",
+            "Department": "Department",
+            "KnowledgeGapRequest": "Gap Request",
+            "AuditLog": "Audit Log",
+            "Comment": "Comment",
+            "Attachment": "Attachment",
+            "KNOWLEDGE": "Knowledge",
+            "USER": "User",
+            "MACHINE": "Machine",
+            "DEPARTMENT": "Department",
+            "KNOWLEDGE_GAP_REQUEST": "Gap Request",
+            "AUDIT_LOG": "Audit Log",
+            "COMMENT": "Comment",
+            "ATTACHMENT": "Attachment"
+        },
+        "detailsLabels": {
+            "status": "Status",
+            "reason": "Reason",
+            "rejectionReason": "Rejection Reason",
+            "comment": "Comment",
+            "name": "Name",
+            "email": "Email",
+            "role": "Role",
+            "departmentId": "Department ID",
+            "note": "Note"
+        },
+        "detailsValues": {
+            "CLOSED": "Closed",
+            "OPEN": "Open",
+            "PENDING": "Pending",
+            "APPROVED": "Approved",
+            "REJECTED": "Rejected"
+        }
     },
     "theme": {
         "light": "Light",
         "dark": "Dark",
         "system": "System"
+    },
+    "settings": {
+        "title": "Profile Settings",
+        "systemAccount": "System Account",
+        "preferences": "Preferences",
+        "noteAdmin": "Note: Your email, role, and department are controlled by system administrators.",
+        "language": "Language",
+        "theme": "Theme",
+        "languages": {
+            "en": "English (US)",
+            "fr": "Français (France)",
+            "ar": "العربية (Arabic)"
+        },
+        "themes": {
+            "system": "System Default",
+            "light": "Light Mode",
+            "dark": "Dark Mode"
+        },
+        "saving": "Saving...",
+        "saved": "Saved!",
+        "namePlaceholder": "Your name",
+        "manageProfileSubtitle": "Manage your account preferences and personal information",
+        "failedToUpdateProfile": "Failed to update profile",
+        "errorOccurred": "An error occurred",
+        "systemSettings": "Global System Settings",
+        "auditKeepLatest": "Audit Log: Keep Latest Records",
+        "auditMaxAgeDays": "Audit Log: Prune older than (days)",
+        "auditKeepLatestHelp": "Specify the maximum number of most recent logs to keep in the database.",
+        "auditMaxAgeHelp": "Logs older than this number of days will be deleted during cleanup.",
+        "globalSettingsDesc": "These parameters affect all administrators and background maintenance tasks."
+    },
+    "notifications": {
+        "reviewRequiredSubject": "Review Required: {title}",
+        "reviewRequiredMessage": "User {name} has submitted a new knowledge item for your review.\nPlease review and approve the draft within the platform.",
+        "gapAssignedSubject": "Knowledge Gap Assigned: {title}",
+        "gapAssignedMessage": "You have been assigned to fulfill a documentation request regarding:\n\"{title}\"\nStatus has been updated to ASSIGNED."
     }
 }

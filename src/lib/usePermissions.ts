@@ -14,23 +14,19 @@ interface UserPermissions {
     permissions: Record<string, boolean>;
 }
 
-let cachedPermissions: UserPermissions | null = null;
-
 export function clearPermissionsCache() {
-    cachedPermissions = null;
+    // No-op after removing global cache
 }
 
 export function usePermissions() {
-    const [data, setData] = useState<UserPermissions | null>(cachedPermissions);
-    const [loading, setLoading] = useState(!cachedPermissions);
+    const [data, setData] = useState<UserPermissions | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (cachedPermissions) return;
         fetch('/api/me')
             .then((r) => r.json())
             .then((d) => {
                 if (d.authenticated) {
-                    cachedPermissions = d;
                     setData(d);
                 }
                 setLoading(false);
